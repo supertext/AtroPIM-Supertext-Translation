@@ -100,3 +100,7 @@ Errors instead of a summary: *This file isn't a valid XLIFF or HTML translation 
 | `Too many requests to Supertext` / `Timed out …` | Supertext was busy or the text was long. Try again in a moment. |
 | `… has no multilingual text fields` | This kind of record has nothing to translate. Ask your administrator. |
 | `Translate with Supertext is finished. To view the result, click here` | AtroPIM's notification when the action has run; the link opens the run's details. |
+
+## Support
+
+Questions, problems or ideas: use the [Supertext support form](https://integrations.supertext.com/en/support?platform=atropim). Mention the version of AtroPIM and of the plugin, what you did and what you expected; an error message helps a lot. You get an answer by email, in your language.

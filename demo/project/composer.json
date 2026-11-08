@@ -7,7 +7,7 @@
     {"type": "composer", "url": "https://packagist.atrocore.com/packages.json?id=supertext-demo"}
   ],
   "require": {
-    "atrocore/core": "2.4.7",
+    "atrocore/core": "2.5.4",
     "atrocore/pim": "1.16.10"
   },
   "config": {

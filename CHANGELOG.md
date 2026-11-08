@@ -9,6 +9,7 @@ All notable changes to Supertext Translation for AtroPIM.
 - Requests to Supertext name the module's version in the User-Agent (`AtroPIM-Supertext-Translation/<version>`).
 - Export for translation (XLIFF 1.2 or HTML) and import of translated files; Supertext SDK 0.5.0. Two new action types, *Export for translation* (downloads the record's texts as `atropim-product-<id>-<language>.xlf` or `.html`) and *Import translation* (opens an upload page with a summary per record and language: imported, skipped because the source changed, not translated, formatting changed, not in the file, kept), the REST endpoints `GET /api/supertext/export` and `GET`/`POST /api/supertext/import`, and the console commands `supertext export` and `supertext import`. Files up to 10 MB, read in memory and never stored; imports need edit permission on each record.
 - Support: the Supertext support form is linked in the README, the user guide and GitHub's "New issue" page.
+- Docs: a demo movie at the top of the README (`docs/images/demo.gif`), recorded with a voice by `tests/docs/movie.mjs`, and an install and configuration movie (`tests/docs/movie-install.mjs`, MP4 only, not committed).
 
 ### Changed
 - Tested with AtroCore 2.6.7 and AtroPIM 1.16.11 (and AtroCore 2.5.4 with AtroPIM 1.16.10); the demo and CI now install AtroCore 2.6.7 and AtroPIM 1.16.11 instead of AtroCore 2.4.7 and AtroPIM 1.16.10. AtroCore 2.4 stays supported.

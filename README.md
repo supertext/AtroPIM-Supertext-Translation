@@ -2,6 +2,8 @@
 
 Translate AtroPIM products, and any other AtroCore record, into your other languages with **Supertext AI**: a **Translate with Supertext** button on the product and a mass action in the product list.
 
+![Demo: an editor opens a product in English in AtroPIM, clicks Translate with Supertext, and the German, French and Italian names and descriptions are filled in](docs/images/demo.gif)
+
 The record's multilingual texts go to Supertext in one request per language and come back into that language's fields, saved through AtroCore's own permissions, validation and history. Editors review and adjust the translation in AtroPIM as usual.
 
 - Translates multilingual text, Markdown and rich text fields and attribute values (bold text, links and lists are kept; whole sentences are translated)

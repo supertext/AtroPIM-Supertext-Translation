@@ -155,7 +155,7 @@ The unit tests cover the SDK wrapper (protocol, errors, segments, splitting into
 
 ## Demo (Railway)
 
-`demo/` builds one image (`demo/Dockerfile`, build context = repository root; `railway.json` points Railway at it): PHP 8.4 + Apache with AtroCore 2.5.4, AtroPIM 1.16.10 and this module, plus AtroCore's job runner (`console.php cron` every minute). MySQL is a separate service.
+`demo/` builds one image (`demo/Dockerfile`, build context = repository root; `railway.json` points Railway at it): PHP 8.4 + Apache with AtroCore 2.6.7, AtroPIM 1.16.11 and this module, plus AtroCore's job runner (`console.php cron` every minute). MySQL is a separate service.
 
 On every start `demo/docker/entrypoint.sh`:
 

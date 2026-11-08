@@ -42,9 +42,16 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/atro"
           cp demo/project/composer.json "$RUNNER_TEMP/atro/"
-          composer install -d "$RUNNER_TEMP/atro" --no-dev --no-scripts --no-plugins --ignore-platform-reqs --no-interaction --no-progress --prefer-dist
+          composer install -d "$RUNNER_TEMP/atro" --no-dev --no-scripts --no-plugins --ignore-platform-reqs --no-interaction --no-progress --prefer-dist 2>&1 | tee "$RUNNER_TEMP/install.log"
       - name: PHPStan
-        run: ATRO_VENDOR="$RUNNER_TEMP/atro/vendor" phpstan analyse --no-progress --memory-limit=2G --error-format=github
+        run: ATRO_VENDOR="$RUNNER_TEMP/atro/vendor" phpstan analyse --no-progress --memory-limit=2G --error-format=raw 2>&1 | tee "$RUNNER_TEMP/phpstan.log"
+      - if: failure()
+        run: |
+          note() { printf '::error title=%s::%s\n' "$1" "$(tail -n 40 | cut -c1-300 | sed -e 's/%/%25/g' | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/%0A/g')"; }
+          [ -f "$RUNNER_TEMP/install.log" ] && note install < "$RUNNER_TEMP/install.log"
+          [ -f "$RUNNER_TEMP/phpstan.log" ] && note phpstan < "$RUNNER_TEMP/phpstan.log"
+          (which phpstan; phpstan --version; php -v) 2>&1 | note tools || true
+          true
 
   demo:
     runs-on: ubuntu-latest

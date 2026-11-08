@@ -21,11 +21,17 @@ jobs:
       - name: actionlint
         run: |
           bash <(curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash) 1.7.12
-          ./actionlint -color
+          ./actionlint -color 2>&1 | tee "$RUNNER_TEMP/al.log"
       - name: zizmor
-        run: pipx run zizmor==1.32.0 --format=github .github/workflows
+        run: pipx run zizmor==1.32.0 --format=plain .github/workflows 2>&1 | tee "$RUNNER_TEMP/zz.log"
         env:
           GH_TOKEN: ${{ github.token }}
+      - if: failure()
+        run: |
+          note() { printf '::error title=%s::%s\n' "$1" "$(tail -n 40 | cut -c1-300 | sed -e 's/%/%25/g' | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/%0A/g')"; }
+          [ -f "$RUNNER_TEMP/al.log" ] && note actionlint < "$RUNNER_TEMP/al.log"
+          [ -f "$RUNNER_TEMP/zz.log" ] && note zizmor < "$RUNNER_TEMP/zz.log"
+          true
 
   dependency-review:
     name: Dependency review

@@ -4,7 +4,7 @@ For administrators. The module adds **Translate with Supertext** to AtroPIM (and
 
 ## Requirements
 
-- AtroCore 2.4 or later with AtroPIM 1.16 or later (tested with AtroCore 2.4.7 and AtroPIM 1.16.10), on PHP 8.4 or 8.5 with the `curl`, `dom` and `mbstring` extensions (AtroCore needs them anyway).
+- AtroCore 2.4 or later with AtroPIM 1.16 or later (tested with AtroCore 2.5.4 and AtroPIM 1.16.10; AtroCore 2.4.7 was tested before), on PHP 8.4 or 8.5 with the `curl`, `dom` and `mbstring` extensions (AtroCore needs them anyway).
 - At least two languages under **Administration → Languages**, and multilingual fields (see [Languages](#languages)).
 - AtroCore's cron job (`php console.php cron` every minute, part of every AtroCore installation) for translations that run in the background.
 - A Supertext account with an AI API key. No Supertext account yet? Create one at supertext.com: <https://www.supertext.com/person/en/account/signin>. Generate your API key at supertext.com → Integrations → API: <https://www.supertext.com/en/integrations/api> (requires the Admin role).

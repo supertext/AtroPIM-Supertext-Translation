@@ -8,7 +8,7 @@
 
 # --- PHP 8.4 with AtroCore's extensions ----------------------------------------------------
 FROM mirror.gcr.io/library/php:8.4-apache-bookworm AS php
-ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.12.3/install-php-extensions /usr/local/bin/
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.13.2/install-php-extensions /usr/local/bin/
 RUN install-php-extensions exif ftp gd imagick intl opcache pdo_mysql sockets zip \
  && apt-get update && apt-get install -y --no-install-recommends git unzip \
  && rm -rf /var/lib/apt/lists/* \

@@ -4,10 +4,11 @@
     "supertextEnvironment": "Ambiente",
     "supertextApiUrl": "URL API",
     "supertextTimeout": "Timeout (secondi)",
-    "supertextLanguageCodes": "Associazione delle lingue",
+    "supertextLanguageCodes": "Associazione delle lingue (vecchio campo di testo)",
     "supertextVersionReports": "Inviare le informazioni sulla versione a Supertext",
     "supertextKeyCheck": "Verifica della chiave API",
-    "supertextLanguageStatus": "Lingue"
+    "supertextLanguageStatus": "Lingue",
+    "supertextReviewUrl": "URL del servizio di revisione"
   },
   "options": {
     "type": {
@@ -25,9 +26,17 @@
     "supertextEnvironment": "Live per l'uso normale. Staging e Testing sono i sistemi di test di Supertext.",
     "supertextApiUrl": "URL di base dell'API Supertext, p. es. https://api.supertext.com/v1/",
     "supertextTimeout": "Quanto attendere al massimo per una traduzione (da 30 a 1800 secondi).",
-    "supertextLanguageCodes": "Una riga per ogni lingua AtroPIM con il suo codice Supertext, p. es. «de_DE = de-CH» o «es_ES = es». Le lingue il cui codice è già un codice Supertext, a parte maiuscole/minuscole e _/- (de_CH, fr_CH, it_IT, en_US), non richiedono una riga; ogni altra lingua deve essere associata, altrimenti non viene tradotta. Codici Supertext: tedesco, inglese, francese, italiano e portoghese con regione (de-CH, en-US, pt-BR), zh-Hans/zh-Hant, sr-Latn/sr-Cyrl, gsw-u-sd-chzh/gsw-u-sd-chbe, tutte le altre lingue senza regione (es, nl, sl, …). Come lingua di partenza vale la stessa riga senza regione (de-CH → de).",
+    "supertextLanguageCodes": "Le versioni precedenti salvavano l'associazione in questo campo di testo (una riga per lingua, p. es. «de_DE = de-CH»). Le sue righe vengono riprese nei menu a tendina quando la connessione viene aperta o salvata; le righe per lingue che AtroPIM non ha, o con un codice che Supertext non elenca, restano qui e valgono ancora. I menu a tendina hanno la precedenza.",
     "supertextVersionReports": "Invia a Supertext l'URL del sito e le versioni di questo modulo, del PIM e dell'ambiente di esecuzione quando salva queste impostazioni e dopo un aggiornamento. In questo modo l'assistenza Supertext vede quale versione utilizza. Non vengono trasmessi contenuti, chiavi API né dati personali. SUPERTEXT_VERSION_REPORTS=0 sul server lo disattiva per l'intera installazione.",
     "supertextKeyCheck": "L'ultima verifica automatica della chiave API (al salvataggio della connessione, con «Testa connessione» e quando Supertext rifiuta la chiave) e se le informazioni sulla versione vengono inviate a Supertext.",
-    "supertextLanguageStatus": "Il codice Supertext con cui viene inviata ogni lingua AtroPIM. Una lingua «non associata» viene tradotta solo dopo averla aggiunta all'associazione delle lingue."
+    "supertextLanguageStatus": "Il codice Supertext con cui viene inviata ogni lingua AtroPIM. Una lingua «senza lingua Supertext» viene tradotta solo dopo che ne ha scelta una nel suo menu a tendina.",
+    "supertextReviewUrl": "Indirizzo del servizio di revisione di Supertext, usato per le lingue con la revisione delle traduzioni attivata. Vuoto disattiva la revisione delle traduzioni per tutte le lingue. La modifichi solo se Supertext Le fornisce un altro indirizzo. SUPERTEXT_REVIEW_URL sul server ha la precedenza."
+  },
+  "labels": {
+    "supertextLanguageField": "Lingua Supertext per {language}",
+    "supertextLanguageChoose": "— scegliere —",
+    "supertextLanguageFieldTooltip": "La lingua Supertext in cui (e, senza la regione, da cui) viene tradotta questa lingua AtroPIM. È preselezionato il codice Supertext della lingua dove ce n'è uno ovvio (de_CH → de-CH, de → de-DE, es_ES → es); lingue come de_LI, en_IE o fr_BE richiedono una scelta, altrimenti non vengono tradotte.",
+    "supertextReviewField": "Revisione delle traduzioni",
+    "supertextReviewFieldTooltip": "Le traduzioni in questa lingua passano dal servizio di revisione di Supertext, così i revisori possono controllarle e correggerle direttamente sul Suo sito con l'estensione Supertext Localization Review. Le loro correzioni vengono riprese alla prossima traduzione del record."
   }
 }

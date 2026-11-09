@@ -12,14 +12,23 @@ namespace SupertextTranslation\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Listeners\AbstractLayoutListener;
+use SupertextTranslation\Translation\ConnectionStatus;
+use SupertextTranslation\Translation\LanguageMapping;
 
-/** Adds the Supertext fields to the Connection form; they are only visible for type "Supertext". */
+/**
+ * Adds the Supertext fields to the Connection form; they are only visible for type "Supertext".
+ * The language mapping is one row per AtroCore language: its Supertext language and its
+ * *Translation review* (see LanguageMapping).
+ */
 class ConnectionLayout extends AbstractLayoutListener
 {
-    public const ROWS = [
+    public const ROWS_BEFORE_LANGUAGES = [
         [['name' => 'supertextApiKey'], ['name' => 'supertextEnvironment']],
         [['name' => 'supertextApiUrl'], ['name' => 'supertextTimeout']],
-        [['name' => 'supertextLanguageCodes', 'fullWidth' => true]],
+    ];
+
+    public const ROWS_AFTER_LANGUAGES = [
+        [['name' => 'supertextReviewUrl'], false],
         [['name' => 'supertextVersionReports'], false],
         [['name' => 'supertextKeyCheck', 'fullWidth' => true]],
         [['name' => 'supertextLanguageStatus', 'fullWidth' => true]],
@@ -31,6 +40,22 @@ class ConnectionLayout extends AbstractLayoutListener
             return;
         }
 
-        $event->setArgument('result', ActionLayout::addRows($event->getArgument('result'), self::ROWS, 'supertextApiKey'));
+        try {
+            [$languages] = ConnectionStatus::languages($this->getContainer());
+        } catch (\Throwable) {
+            $languages = [];
+        }
+
+        $event->setArgument('result', ActionLayout::addRows($event->getArgument('result'), self::rows($languages), 'supertextApiKey'));
+    }
+
+    /**
+     * @param list<string> $languages
+     *
+     * @return list<list<array<string, mixed>|false>>
+     */
+    public static function rows(array $languages): array
+    {
+        return array_merge(self::ROWS_BEFORE_LANGUAGES, LanguageMapping::rows($languages), self::ROWS_AFTER_LANGUAGES);
     }
 }

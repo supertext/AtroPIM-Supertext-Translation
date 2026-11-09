@@ -65,6 +65,6 @@ final class ConnectionResolver
             $key       = \is_string($decrypted) ? $decrypted : '';
         }
 
-        return Settings::fromConnectionData(\is_array($data) ? $data : [], $key);
+        return Settings::fromConnectionData(\is_array($data) ? $data : [], $key, ConnectionStatus::languages($container)[0]);
     }
 }

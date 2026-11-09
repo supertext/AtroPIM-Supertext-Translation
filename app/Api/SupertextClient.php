@@ -33,6 +33,16 @@ final class SupertextClient
     public const STAGING = 'https://api.staging.supertext.com/v1/';
     public const TESTING = 'https://api.testing.supertext.com/v1/';
 
+    /**
+     * Supertext's review service (translation proxy of Supertext Localization Review). It speaks the
+     * same API and forwards to the live Supertext API, keeping every translation so reviewers can
+     * correct them on the website. Used for target languages with *Translation review* on.
+     */
+    public const REVIEW_URL = 'https://localizationreview-production.up.railway.app/v1/';
+
+    /** The User-Agent's name; the module's version follows it ("AtroPIM-Supertext-Translation/0.2.0"). */
+    public const USER_AGENT = 'AtroPIM-Supertext-Translation';
+
     /** Stay well below the API's 1,000,000 character limit per document. */
     public const MAX_DOCUMENT_CHARACTERS = Protocol::DEFAULT_MAX_CHARACTERS;
 
@@ -44,7 +54,7 @@ final class SupertextClient
         SdkException::MISSING_API_KEY => ['no_api_key', 'No Supertext API key is configured.'],
         SdkException::AUTHENTICATION_FAILURE => ['auth_failed', 'Authentication failed. Please check the Supertext API key.'],
         SdkException::INVALID_LANGUAGE_PAIR => ['invalid_language_pair', 'Supertext does not support this language pair (%s → %s).'],
-        SdkException::UNSUPPORTED_LANGUAGE => ['unsupported_language', 'The language %s has no Supertext language yet. Map it in the language mapping of the Supertext connection.'],
+        SdkException::UNSUPPORTED_LANGUAGE => ['unsupported_language', 'The language %s has no Supertext language yet. Choose one for it in the Supertext connection (Administration → Connections).'],
         SdkException::UNSUPPORTED_FEATURE => ['unsupported_feature', 'Supertext offers no formal or informal tone for this language. Set the form of address to Default.'],
         SdkException::NOT_FOUND => ['not_found', 'The requested Supertext resource was not found.'],
         SdkException::PAYLOAD_TOO_LARGE => ['too_large', 'The content is too large for Supertext to translate in one go.'],
@@ -63,9 +73,16 @@ final class SupertextClient
     private readonly Client $sdk;
     private readonly string $apiKey;
 
+    /** @var (\Closure(): self)|null builds the client for the review service (null: none) */
+    private readonly ?\Closure $makeReviewClient;
+
+    private ?self $reviewClient = null;
+
     /**
      * @param HttpTransport|callable(string $method, string $url, array<string, string> $headers, ?string $body): array{status: int, body: string, headers: array<string, string>} $transport
      * @param callable(float $seconds): void|null $sleep tests: the SDK's clock then counts the slept time
+     * @param string $reviewUrl     the review service for languages with Translation review ('' = none)
+     * @param string $pluginVersion the module's version for the User-Agent ('' = "dev")
      */
     public function __construct(
         string $apiKey,
@@ -74,8 +91,16 @@ final class SupertextClient
         private readonly int $pollTimeout = 180,
         float $pollInterval = 2.0,
         ?callable $sleep = null,
+        string $reviewUrl = '',
+        string $pluginVersion = '',
     ) {
         $this->apiKey = self::normalizeKey($apiKey);
+        $baseUrl      = $baseUrl !== '' ? $baseUrl : self::LIVE;
+        $reviewUrl    = trim($reviewUrl);
+
+        $this->makeReviewClient = $reviewUrl === '' || rtrim($reviewUrl, '/') === rtrim($baseUrl, '/')
+            ? null
+            : static fn (): self => new self($apiKey, $reviewUrl, $transport, $pollTimeout, $pollInterval, $sleep, '', $pluginVersion);
 
         $elapsed = 0.0;
         $sdkSleep = $sleep === null ? null : static function (float $seconds) use ($sleep, &$elapsed): void {
@@ -88,11 +113,12 @@ final class SupertextClient
 
         $this->sdk = new Client(
             $this->apiKey,
-            baseUrl: $baseUrl !== '' ? $baseUrl : self::LIVE,
+            baseUrl: $baseUrl,
             pollInterval: $pollInterval,
             timeout: (float) $pollTimeout,
             requestTimeout: 60.0,
-            userAgent: 'AtroPIM-Supertext-Translation',
+            // The module's version too, so Supertext and the review service see which release calls.
+            userAgent: self::USER_AGENT . '/' . ($pluginVersion !== '' ? $pluginVersion : 'dev'),
             transport: $transport instanceof HttpTransport ? $transport : new CallableTransport($transport),
             sleep: $sdkSleep,
             clock: $clock,
@@ -121,6 +147,20 @@ final class SupertextClient
     public function hasApiKey(): bool
     {
         return $this->apiKey !== '';
+    }
+
+    /**
+     * The client for a target language: the review service when its *Translation review* is on
+     * (same key, timeouts, transport and User-Agent; created once), else this one. Without a review
+     * URL, always this one. A document is uploaded, polled, downloaded and deleted by the same client.
+     */
+    public function forReview(bool $review): self
+    {
+        if (!$review || $this->makeReviewClient === null) {
+            return $this;
+        }
+
+        return $this->reviewClient ??= ($this->makeReviewClient)();
     }
 
     /**

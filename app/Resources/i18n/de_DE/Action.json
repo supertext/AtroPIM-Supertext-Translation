@@ -4,11 +4,14 @@
     "supertextSourceLanguage": "Ausgangssprache",
     "supertextTargetLanguages": "Zielsprachen",
     "supertextOverwrite": "Bestehende Übersetzungen überschreiben",
-    "supertextPoliteness": "Anrede"
+    "supertextPoliteness": "Anrede",
+    "supertextFileFormat": "Dateiformat"
   },
   "options": {
     "type": {
-      "supertextTranslate": "Mit Supertext übersetzen"
+      "supertextTranslate": "Mit Supertext übersetzen",
+      "supertextExport": "Für Übersetzung exportieren",
+      "supertextImport": "Übersetzung importieren"
     },
     "supertextSourceLanguage": {
       "": "Hauptsprache"
@@ -17,6 +20,10 @@
       "": "Standard",
       "more": "Formell (Sie)",
       "less": "Informell (du)"
+    },
+    "supertextFileFormat": {
+      "xliff": "XLIFF 1.2 (für Übersetzungstools)",
+      "html": "HTML (eine Sprache pro Datei)"
     }
   },
   "tooltips": {
@@ -24,7 +31,8 @@
     "supertextSourceLanguage": "Die Sprache, aus der übersetzt wird. Leer: die Hauptsprache.",
     "supertextTargetLanguages": "Die Sprachen, in die übersetzt wird. Leer: alle anderen Sprachen.",
     "supertextOverwrite": "Aus: Felder, die in einer Zielsprache schon Text haben, bleiben unverändert. Ein: Sie werden durch die neue Übersetzung ersetzt.",
-    "supertextPoliteness": "Formelle oder informelle Anrede, für Sprachen, die beides kennen (z. B. Sie/du). Supertext bietet sie nicht für jede Sprache an (z. B. nicht für Englisch, Rätoromanisch oder Albanisch): Diese werden mit der Standard-Anrede übersetzt, und das Ergebnis weist darauf hin."
+    "supertextPoliteness": "Formelle oder informelle Anrede, für Sprachen, die beides kennen (z. B. Sie/du). Supertext bietet sie nicht für jede Sprache an (z. B. nicht für Englisch, Rätoromanisch oder Albanisch): Diese werden mit der Standard-Anrede übersetzt, und das Ergebnis weist darauf hin.",
+    "supertextFileFormat": "Für Übersetzung exportieren: XLIFF 1.2 für Übersetzungstools (eine Datei für alle Zielsprachen) oder HTML (eine Zielsprache pro Datei, z. B. für die Web-App von Supertext)."
   },
   "messages": {
     "supertextKeyHelp": "Noch kein Supertext-Konto? Erstellen Sie eines unter https://www.supertext.com/person/en/account/signin. Den API-Schlüssel erzeugen Sie unter https://www.supertext.com/en/integrations/api (supertext.com → Integrations → API; erfordert die Admin-Rolle).",
@@ -62,7 +70,7 @@
     "supertextNoTargets": "Keine anderen Sprachen zum Übersetzen.",
     "supertextRecordsTranslated": "Supertext hat {done} von {total} Datensätzen übersetzt.",
     "supertextRecordsFailed": "Den Grund zeigt das Panel Läufe der Aktion.",
-    "supertextUnsupportedLanguage": "Die Sprache {language} ist noch keiner Supertext-Sprache zugeordnet. Bitten Sie Ihre Administratorin oder Ihren Administrator, sie in der Sprachzuordnung der Supertext-Verbindung zuzuordnen (Verwaltung → Verbindungen), z. B. \"de_DE = de-CH\".",
+    "supertextUnsupportedLanguage": "Die Sprache {language} ist noch keiner Supertext-Sprache zugeordnet. Bitten Sie Ihre Administratorin oder Ihren Administrator, in der Supertext-Verbindung eine zu wählen (Verwaltung → Verbindungen → die Supertext-Verbindung → «Supertext-Sprache für {language}»).",
     "supertextUnsupportedFeature": "Supertext bietet für diese Sprache keine formelle oder informelle Anrede an. Stellen Sie die Anrede der Aktion auf «Standard».",
     "supertextPolitenessSkipped": "Supertext bietet für {language} keine formelle oder informelle Anrede an: mit der Standard-Anrede übersetzt.",
     "supertextKeyCheckOk": "API-Schlüssel geprüft: Die Verbindung zu Supertext funktioniert.",
@@ -76,10 +84,39 @@
     "supertextReportsOff": "Es werden keine Versionsinformationen an Supertext gesendet.",
     "supertextReportsOffEnvironment": "Es werden keine Versionsinformationen an Supertext gesendet: Auf dem Server ist SUPERTEXT_VERSION_REPORTS=0 gesetzt, das diese Einstellung übersteuert.",
     "supertextLanguageMapped": "{language} → {code}",
-    "supertextLanguageNotMapped": "{language}: nicht zugeordnet. Ergänzen Sie in der Sprachzuordnung eine Zeile \"{language} = …\" mit dem Supertext-Code; bis dahin wird sie nicht übersetzt.",
+    "supertextLanguageNotMapped": "{language}: keine Supertext-Sprache. Wählen Sie in ihrem Auswahlfeld in der Supertext-Verbindung eine; bis dahin wird sie nicht übersetzt.",
     "supertextLanguageNoPoliteness": "(keine formelle/informelle Anrede)",
     "supertextLanguageUnlisted": "(nicht in der Supertext-Liste vom Oktober 2026: wird wie eingetragen gesendet)",
     "supertextLanguageSource": "· als Ausgangssprache: {code}",
-    "supertextLanguageSourceNotMapped": "· als Ausgangssprache: nicht zugeordnet"
+    "supertextLanguageSourceNotMapped": "· als Ausgangssprache: nicht zugeordnet",
+    "supertextNothingToTranslate": "Nichts zu übersetzen.",
+    "supertextHtmlOneLanguage": "Eine HTML-Datei enthält eine Zielsprache: Wählen Sie genau eine Zielsprache oder verwenden Sie XLIFF.",
+    "supertextFileDownload": "Datei herunterladen: {file}",
+    "supertextFileImportOpens": "Übersetzung importieren öffnet sich in einem neuen Tab.",
+    "supertextFileInvalidFile": "Diese Datei ist keine gültige XLIFF- oder HTML-Übersetzungsdatei.",
+    "supertextFileMissingMetadata": "Diese Datei wurde nicht vom Supertext-Modul exportiert, oder ihr Kopfbereich wurde entfernt.",
+    "supertextFileTooLarge": "Die Datei ist zu gross (höchstens 10 MB).",
+    "supertextFileInvalidJob": "Die Datei konnte nicht erstellt werden.",
+    "supertextFileOtherSystem": "Diese Datei gehört zu einem anderen System ({plugin}).",
+    "supertextFileNotFound": "Der Datensatz, aus dem diese Datei exportiert wurde, existiert nicht mehr.",
+    "supertextFileNoLanguage": "AtroPIM hat keine Sprache {language}.",
+    "supertextFileNotAllowed": "Sie dürfen diesen Datensatz nicht bearbeiten.",
+    "supertextFileNoFile": "Wählen Sie eine Datei zum Importieren.",
+    "supertextFileJob": "{entity} {id}, {language}",
+    "supertextFileImported": "Importiert: {count}",
+    "supertextFileSourceChanged": "Übersprungen, Ausgangstext seit dem Export geändert: {count}",
+    "supertextFileUntranslated": "In der Datei nicht übersetzt: {count}",
+    "supertextFileInvalidMarkup": "Formatierung verändert, nicht importiert: {count}",
+    "supertextFileMissing": "Nicht in der Datei: {count}",
+    "supertextFileKept": "Beibehalten, in AtroPIM bereits übersetzt: {count}",
+    "supertextFilePageTitle": "Übersetzung importieren",
+    "supertextFileField": "Übersetzte Datei (XLIFF oder HTML)",
+    "supertextFileIncludeChanged": "Auch Texte importieren, deren Ausgangstext sich seit dem Export geändert hat",
+    "supertextFileOverwrite": "Bestehende Übersetzungen überschreiben",
+    "supertextFileSubmit": "Übersetzung importieren",
+    "supertextFileHelp": "Laden Sie eine Datei hoch, die mit «Für Übersetzung exportieren» exportiert und inzwischen übersetzt wurde. Die Texte werden in der Zielsprache des Datensatzes gespeichert, wie bei einer Übersetzung mit Supertext.",
+    "supertextFileResult": "Ergebnis",
+    "supertextInvalidLanguageCode": "«{code}» ist keine Supertext-Sprache. Wählen Sie eine aus der Liste.",
+    "supertextLanguageReview": "· Übersetzungsprüfung"
   }
 }

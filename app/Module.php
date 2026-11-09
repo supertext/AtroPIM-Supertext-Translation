@@ -12,6 +12,8 @@ namespace SupertextTranslation;
 
 use Atro\Core\ModuleManager\AbstractModule;
 use SupertextTranslation\Console\Check;
+use SupertextTranslation\Console\Export;
+use SupertextTranslation\Console\Import;
 use SupertextTranslation\Console\Translate;
 
 /**
@@ -31,6 +33,8 @@ class Module extends AbstractModule
         return [
             'supertext check'            => Check::class,
             'supertext translate <args>' => Translate::class,
+            'supertext export <args>'    => Export::class,
+            'supertext import <args>'    => Import::class,
         ];
     }
 }

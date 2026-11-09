@@ -65,12 +65,20 @@ jobs:
         with:
           node-version: 22
       - name: Build the demo image (AtroPIM with the module)
-        run: docker build -f demo/Dockerfile -t supertext-atropim-demo .
+        run: docker build -f demo/Dockerfile -t supertext-atropim-demo . 2>&1 | tee build.log
       - name: Start the stand-in API
         run: node tests/docs/stand-in.mjs > stand-in.log 2>&1 &
       - name: Start the demo twice, check the accounts, translate the samples
         env:
           MYSQL_URL: mysql://root:root@127.0.0.1:3306/railway
-        run: tests/demo-check.sh
+        run: tests/demo-check.sh 2>&1 | tee check.log
       - if: failure()
         run: docker logs demo 2>&1 | tail -150; cat stand-in.log
+      - if: failure()
+        run: |
+          note() { printf '::error title=%s::%s\n' "$1" "$(tail -n 60 | cut -c1-300 | sed -e 's/%/%25/g' | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/%0A/g')"; }
+          [ -f build.log ] && note build < build.log
+          [ -f check.log ] && note check < check.log
+          docker logs demo 2>&1 | note demo-log || true
+          [ -f stand-in.log ] && note stand-in < stand-in.log
+          true

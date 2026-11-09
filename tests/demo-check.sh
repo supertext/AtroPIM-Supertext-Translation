@@ -57,6 +57,40 @@ assert r['api_key_check']['status'] == 'ok' and r['api_key_configured'] is True,
 assert 'anything' not in json.dumps(reports), 'the API key must never be reported'
 PY
 
+# The language mapping: one combo box per language, preselected with Supertext's code, validated on
+# save, and the old text field's lines moved into the combo boxes (as the administrator, REST API).
+admin_token=$(curl -sf -H "Authorization-Token: $(printf '%s:%s' "$DEMO_ADMIN_EMAIL" "$DEMO_ADMIN_PASSWORD" | base64 -w0)" http://127.0.0.1:$PORT/api/userSession | python3 -c 'import json,sys; print(json.load(sys.stdin)["user"]["token"])')
+admin="Authorization-Token: $(printf '%s:%s' "$DEMO_ADMIN_EMAIL" "$admin_token" | base64 -w0)"
+connection=$(sql "select id from connection where type = 'supertext' and deleted = 0")
+field() { curl -sf -H "$admin" "http://127.0.0.1:$PORT/api/Connection/$connection" | python3 -c "import json,sys; print(json.load(sys.stdin).get('$1'))"; }
+patch() { curl -s -o /dev/null -w '%{http_code}' -H "$admin" -H 'Content-Type: application/json' -X PATCH "http://127.0.0.1:$PORT/api/Connection/$connection" -d "$1"; }
+test "$(field supertextCodeDeCh)" = de-CH
+test "$(field supertextCodeEnUs)" = en-US
+grep -qF '"fr-FR"' <<< "$(curl -sf -H "$admin" http://127.0.0.1:$PORT/api/metadata | python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin)["entityDefs"]["Connection"]["fields"]["supertextCodeFrCh"]["options"]))')"
+labels=$(curl -sf "http://127.0.0.1:$PORT/api/i18n" | python3 -c 'import json,sys; c=json.load(sys.stdin)["Connection"]; print(c["fields"]["supertextCodeFrCh"]); print(c["options"]["supertextCodeFrCh"]["fr-CH"]); print(c["options"]["supertextCodeFrCh"][""])')
+echo "$labels"
+grep -qF 'Supertext language for' <<< "$labels"
+grep -qF '(fr-CH)' <<< "$labels"
+grep -qF -- '— choose —' <<< "$labels"
+test "$(patch '{"supertextCodeFrCh":"xx-YY"}')" = 400
+test "$(patch '{"supertextCodeFrCh":"fr-FR"}')" = 200
+grep -qF 'fr_CH → fr-FR' <<< "$(console supertext check)"
+test "$(patch '{"supertextCodeFrCh":"fr-CH"}')" = 200
+sql "update connection set data = json_remove(json_set(data, '$.supertextLanguageCodes', 'it_CH = it-IT\nxx_YY = xx-YY'), '$.supertextCodeItCh') where id = '$connection'"
+migrated=$(field supertextCodeItCh)
+kept=$(sql "select json_unquote(json_extract(data, '$.supertextLanguageCodes')) from connection where id = '$connection'")
+echo "Migrated: it_CH → $migrated; kept in the old field: $kept"
+test "$migrated" = it-IT
+test "$kept" = 'xx_YY = xx-YY'
+test "$(patch '{"supertextCodeItCh":"it-CH"}')" = 200
+grep -qF 'it_CH → it-CH' <<< "$(console supertext check)"
+# Translation review per language: off by default, ticked next to the combo box, shown by the check.
+[[ "$(field supertextReviewDeCh)" =~ ^(False|None)$ ]]
+test "$(field supertextReviewUrl)" = https://localizationreview-production.up.railway.app/v1/
+test "$(patch '{"supertextReviewDeCh":true}')" = 200
+grep -qF 'de_CH → de-CH · translation review' <<< "$(console supertext check)"
+test "$(patch '{"supertextReviewDeCh":false}')" = 200
+
 # The public ping endpoint (no login): the challenge echoed, nothing else.
 test "$(curl -s "http://127.0.0.1:$PORT/api/supertext/ping?challenge=ci-challenge-0123456789")" = '{"ok":true,"plugin":"AtroPIM-Supertext-Translation","challenge":"ci-challenge-0123456789"}'
 test "$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/api/supertext/ping?challenge=short")" = 400
@@ -80,4 +114,27 @@ result=$(curl -sf -H "Authorization-Token: $(printf '%s:%s' "$DEMO_EDITOR_EMAIL"
 echo "$result"
 grep -qF 'translated (4 fields)' <<< "$result"
 test "$(sql "select name_fr_ch from product where number = 'dark-chocolate-72'")" = "Tablette de chocolat noir, 72 % de cacao"
+
+# Export for translation → Import translation, as the editor through the REST API.
+auth="Authorization-Token: $(printf '%s:%s' "$DEMO_EDITOR_EMAIL" "$token" | base64 -w0)"
+xliff=$(mktemp)
+headers=$(curl -sf -H "$auth" -D - -o "$xliff" "http://127.0.0.1:$PORT/api/supertext/export?entity=Product&id=$praline&targets=de_CH&format=xliff&overwrite=1")
+grep -qi '^content-type: application/x-xliff+xml' <<< "$headers"
+grep -qi "^content-disposition: attachment; filename=\"atropim-product-$praline-de_CH.xlf\"" <<< "$headers"
+grep -qF "original=\"Product:$praline:en_US:de_CH\"" "$xliff"
+python3 - "$xliff" <<'PY'
+import re, sys
+path = sys.argv[1]
+xliff = open(path, encoding='utf-8').read()
+xliff, n = re.subn(r'(<trans-unit id="name"[^>]*>\s*<source>.*?</source>)', r'\1<target>Pralinenschachtel aus der Datei</target>', xliff, flags=re.S)
+assert n == 1, 'no name unit'
+open(path, 'w', encoding='utf-8').write(xliff)
+PY
+result=$(curl -sf -H "$auth" -H 'Accept: application/json' -F "file=@$xliff;type=application/x-xliff+xml" -F overwrite=1 "http://127.0.0.1:$PORT/api/supertext/import")
+echo "$result"
+grep -qF 'Imported: 1' <<< "$result"
+test "$(sql "select name_de_ch from product where id = '$praline'")" = "Pralinenschachtel aus der Datei"
+test "$(curl -s -o /dev/null -w '%{http_code}' -H "$auth" -F "file=@$xliff" -F token=x -b "auth-token=$token" "http://127.0.0.1:$PORT/api/supertext/import")" = 403
+grep -qF 'Translated file (XLIFF or HTML)' <<< "$(curl -sf -H "$auth" "http://127.0.0.1:$PORT/api/supertext/import")"
+rm -f "$xliff"
 echo "Demo check passed"

@@ -4,10 +4,11 @@
     "supertextEnvironment": "Environment",
     "supertextApiUrl": "API URL",
     "supertextTimeout": "Timeout (seconds)",
-    "supertextLanguageCodes": "Language mapping",
+    "supertextLanguageCodes": "Language mapping (old text field)",
     "supertextVersionReports": "Send version information to Supertext",
     "supertextKeyCheck": "API key check",
-    "supertextLanguageStatus": "Languages"
+    "supertextLanguageStatus": "Languages",
+    "supertextReviewUrl": "Review service URL"
   },
   "options": {
     "type": {
@@ -25,9 +26,17 @@
     "supertextEnvironment": "Live for normal use. Staging and Testing are Supertext's test systems.",
     "supertextApiUrl": "Base URL of the Supertext API, e.g. https://api.supertext.com/v1/",
     "supertextTimeout": "How long to wait for one translation (30–1800 seconds).",
-    "supertextLanguageCodes": "One line per AtroPIM language and its Supertext code, e.g. \"de_DE = de-CH\" or \"es_ES = es\". Languages whose code already is a Supertext code apart from case and _/- (de_CH, fr_CH, it_IT, en_US) need no line; every other language must be mapped, or it isn't translated. Supertext codes: German, English, French, Italian and Portuguese with a region (de-CH, en-US, pt-BR), zh-Hans/zh-Hant, sr-Latn/sr-Cyrl, gsw-u-sd-chzh/gsw-u-sd-chbe, all other languages without a region (es, nl, sl, …). As source language, the same line is used without its region (de-CH → de).",
+    "supertextLanguageCodes": "Earlier versions kept the mapping in this text field (one line per language, e.g. \"de_DE = de-CH\"). Its lines are moved into the combo boxes when the connection is opened or saved; lines for languages AtroPIM doesn't have, or with a code Supertext doesn't list, stay here and still count. The combo boxes win.",
     "supertextVersionReports": "Sends the site URL and the versions of this module, the PIM and the runtime to Supertext when you save these settings and after an update, so Supertext support can see which version you run. No content, no API key and no personal data are sent. SUPERTEXT_VERSION_REPORTS=0 on the server turns it off for the whole installation.",
     "supertextKeyCheck": "The latest automatic check of the API key (when the connection is saved, on Test connection and when Supertext rejects the key), and whether version information is sent to Supertext.",
-    "supertextLanguageStatus": "The Supertext code each AtroPIM language is sent as. A language that is \"not mapped\" isn't translated until you add it to the language mapping."
+    "supertextLanguageStatus": "The Supertext code each AtroPIM language is sent as. A language with \"no Supertext language\" isn't translated until you choose one in its combo box.",
+    "supertextReviewUrl": "Address of Supertext's review service, used for the languages with Translation review ticked. Empty turns Translation review off for every language. Only change it when Supertext gives you another address. SUPERTEXT_REVIEW_URL on the server overrides it."
+  },
+  "labels": {
+    "supertextLanguageField": "Supertext language for {language}",
+    "supertextLanguageChoose": "— choose —",
+    "supertextLanguageFieldTooltip": "The Supertext language this AtroPIM language is translated into (and, without its region, from). Preselected with Supertext's code for the language where there is an obvious one (de_CH → de-CH, de → de-DE, es_ES → es); languages such as de_LI, en_IE or fr_BE need a choice, or they aren't translated.",
+    "supertextReviewField": "Translation review",
+    "supertextReviewFieldTooltip": "Translations into this language go through Supertext's review service, so reviewers can check and correct them on your website with the Supertext Localization Review extension. Their corrections are used the next time the record is translated."
   }
 }

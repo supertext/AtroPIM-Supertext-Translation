@@ -14,6 +14,8 @@ class SettingsTest extends TestCase
     {
         putenv('SUPERTEXT_API_KEY');
         putenv('SUPERTEXT_API_URL');
+        putenv('SUPERTEXT_REVIEW_URL');
+        unset($_SERVER['SUPERTEXT_REVIEW_URL'], $_ENV['SUPERTEXT_REVIEW_URL']);
         unset($_SERVER['SUPERTEXT_API_KEY'], $_ENV['SUPERTEXT_API_KEY'], $_SERVER['SUPERTEXT_API_URL'], $_ENV['SUPERTEXT_API_URL']);
     }
 
@@ -58,18 +60,23 @@ class SettingsTest extends TestCase
     {
         $settings = new Settings('k');
 
-        foreach (['de', 'es_ES', 'sl_SI', 'zh_CN', 'en'] as $language) {
+        // Since SDK 0.4.0 an obvious default applies (de → de-DE, es_ES → es, zh_CN → zh-Hans); nothing else is guessed.
+        foreach (['de' => 'de-DE', 'es_ES' => 'es', 'sl_SI' => 'sl', 'zh_CN' => 'zh-Hans', 'en' => 'en-US'] as $language => $code) {
+            self::assertSame($code, $settings->languageCodeOrNull($language), "$language has a default");
+        }
+
+        foreach (['de_LI', 'en_IE', 'fr_BE', 'sr_RS', 'gsw'] as $language) {
             self::assertNull($settings->languageCodeOrNull($language), "$language must be mapped");
         }
 
         try {
-            $settings->languageCode('es_ES');
+            $settings->languageCode('fr_BE');
             self::fail('Expected unsupported_language');
         } catch (SupertextException $e) {
             self::assertSame('unsupported_language', $e->key);
-            self::assertSame(['language' => 'es_ES'], $e->params);
-            self::assertStringContainsString('The language es_ES has no Supertext language yet', $e->getMessage());
-            self::assertStringStartsWith('The language es_ES has no Supertext language yet.', (new Messages())->exception($e));
+            self::assertSame(['language' => 'fr_BE'], $e->params);
+            self::assertStringContainsString('The language fr_BE has no Supertext language yet', $e->getMessage());
+            self::assertStringStartsWith('The language fr_BE has no Supertext language yet.', (new Messages())->exception($e));
         }
 
         $this->expectException(SupertextException::class);
@@ -79,13 +86,13 @@ class SettingsTest extends TestCase
     public function testLanguageStatusShowsUnmappedLanguagesAndMissingTones(): void
     {
         $settings = Settings::fromConnectionData(['supertextLanguageCodes' => "es_ES = es\nrm_CH = rm\nxx_XX = xx-YY"], 'k');
-        $status   = $settings->languageStatus(['en_US', 'de_CH', 'es_ES', 'sl_SI', 'rm_CH', 'xx_XX'], 'en_US', new Messages());
+        $status   = $settings->languageStatus(['en_US', 'de_CH', 'es_ES', 'fr_BE', 'rm_CH', 'xx_XX'], 'en_US', new Messages());
 
         self::assertSame(
             "en_US → en-US (no formal/informal tone) · as source language: en\n"
             . "de_CH → de-CH\n"
             . "es_ES → es\n"
-            . 'sl_SI: not mapped. Add a line "sl_SI = …" with its Supertext code to the language mapping; until then it isn\'t translated.' . "\n"
+            . 'fr_BE: no Supertext language. Choose one in its combo box on the Supertext connection; until then it isn\'t translated.' . "\n"
             . "rm_CH → rm (no formal/informal tone)\n"
             . "xx_XX → xx-YY (not in Supertext's list of October 2026: sent as entered)",
             $status,
@@ -111,5 +118,35 @@ class SettingsTest extends TestCase
         self::assertStringContainsString(Settings::API_KEY_URL, Settings::explain(new SupertextException('Authentication failed.', 401)));
         self::assertStringContainsString(Settings::SIGNUP_URL, Settings::explain(new SupertextException('Authentication failed.', 403)));
         self::assertSame('Timed out.', Settings::explain(new SupertextException('Timed out.')));
+    }
+
+    public function testTranslationReview(): void
+    {
+        $languages = ['en_US', 'de_CH', 'fr_CH'];
+        $data      = ['supertextReviewDeCh' => true, 'supertextReviewFrCh' => false];
+
+        $settings = Settings::fromConnectionData($data, 'k', $languages);
+        self::assertSame(SupertextClient::REVIEW_URL, $settings->reviewUrl(), 'default: Supertext\'s review service');
+        self::assertTrue($settings->review('de_CH'));
+        self::assertFalse($settings->review('fr_CH'), 'off by default');
+        self::assertFalse($settings->review('en_US'));
+        self::assertNotSame($settings->client(), $settings->client()->forReview(true));
+
+        $off = Settings::fromConnectionData($data + ['supertextReviewUrl' => ''], 'k', $languages);
+        self::assertSame('', $off->reviewUrl());
+        self::assertFalse($off->review('de_CH'), 'empty review URL: off for every language');
+        $client = $off->client();
+        self::assertSame($client, $client->forReview(true));
+
+        $custom = Settings::fromConnectionData($data + ['supertextReviewUrl' => 'https://review.example/v1/'], 'k', $languages);
+        self::assertSame('https://review.example/v1/', $custom->reviewUrl());
+
+        putenv('SUPERTEXT_REVIEW_URL=http://127.0.0.1:8765/v1/');
+        self::assertSame('http://127.0.0.1:8765/v1/', $off->reviewUrl(), 'the environment wins');
+        self::assertTrue($off->review('de_CH'));
+
+        $status = $settings->languageStatus($languages, 'en_US', new Messages());
+        self::assertStringContainsString("de_CH → de-CH · translation review\n", $status);
+        self::assertStringContainsString("fr_CH → fr-CH\n", $status . "\n");
     }
 }

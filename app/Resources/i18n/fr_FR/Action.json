@@ -4,11 +4,14 @@
     "supertextSourceLanguage": "Langue source",
     "supertextTargetLanguages": "Langues cibles",
     "supertextOverwrite": "Écraser les traductions existantes",
-    "supertextPoliteness": "Forme d'adresse"
+    "supertextPoliteness": "Forme d'adresse",
+    "supertextFileFormat": "Format de fichier"
   },
   "options": {
     "type": {
-      "supertextTranslate": "Traduire avec Supertext"
+      "supertextTranslate": "Traduire avec Supertext",
+      "supertextExport": "Exporter pour traduction",
+      "supertextImport": "Importer une traduction"
     },
     "supertextSourceLanguage": {
       "": "Langue principale"
@@ -17,6 +20,10 @@
       "": "Par défaut",
       "more": "Formelle (vous)",
       "less": "Informelle (tu)"
+    },
+    "supertextFileFormat": {
+      "xliff": "XLIFF 1.2 (pour les outils de traduction)",
+      "html": "HTML (une langue par fichier)"
     }
   },
   "tooltips": {
@@ -24,7 +31,8 @@
     "supertextSourceLanguage": "La langue à partir de laquelle traduire. Vide : la langue principale.",
     "supertextTargetLanguages": "Les langues vers lesquelles traduire. Vide : toutes les autres langues.",
     "supertextOverwrite": "Désactivé : les champs qui ont déjà un texte dans une langue cible sont conservés. Activé : ils sont remplacés par la nouvelle traduction.",
-    "supertextPoliteness": "Forme d'adresse formelle ou informelle, pour les langues qui distinguent les deux (p. ex. vous/tu en français). Supertext ne la propose pas pour toutes les langues (p. ex. pas pour l'anglais, le romanche ou l'albanais) : celles-ci sont traduites avec le ton par défaut, et le résultat le signale."
+    "supertextPoliteness": "Forme d'adresse formelle ou informelle, pour les langues qui distinguent les deux (p. ex. vous/tu en français). Supertext ne la propose pas pour toutes les langues (p. ex. pas pour l'anglais, le romanche ou l'albanais) : celles-ci sont traduites avec le ton par défaut, et le résultat le signale.",
+    "supertextFileFormat": "Exporter pour traduction : XLIFF 1.2 pour les outils de traduction (un fichier pour toutes les langues cibles) ou HTML (une langue cible par fichier, p. ex. pour l’application web de Supertext)."
   },
   "messages": {
     "supertextKeyHelp": "Pas encore de compte Supertext ? Créez-en un sur https://www.supertext.com/person/en/account/signin. Générez votre clé API sur https://www.supertext.com/en/integrations/api (supertext.com → Integrations → API ; rôle Admin requis).",
@@ -62,7 +70,7 @@
     "supertextNoTargets": "Aucune autre langue vers laquelle traduire.",
     "supertextRecordsTranslated": "Supertext a traduit {done} enregistrements sur {total}.",
     "supertextRecordsFailed": "Le panneau Exécutions de l'action en indique la raison.",
-    "supertextUnsupportedLanguage": "La langue {language} n'est encore associée à aucune langue Supertext. Demandez à votre administrateur de l'associer dans la correspondance des langues de la connexion Supertext (Administration → Connexions), p. ex. « de_DE = de-CH ».",
+    "supertextUnsupportedLanguage": "La langue {language} n'est encore associée à aucune langue Supertext. Demandez à votre administrateur d'en choisir une dans la connexion Supertext (Administration → Connexions → la connexion Supertext → « Langue Supertext pour {language} »).",
     "supertextUnsupportedFeature": "Supertext ne propose pas de ton formel ou informel pour cette langue. Réglez la forme d'adresse de l'action sur « Par défaut ».",
     "supertextPolitenessSkipped": "Supertext ne propose pas de ton formel ou informel pour {language} : traduit avec le ton par défaut.",
     "supertextKeyCheckOk": "Clé API vérifiée : la connexion à Supertext fonctionne.",
@@ -76,10 +84,39 @@
     "supertextReportsOff": "Aucune information de version n'est envoyée à Supertext.",
     "supertextReportsOffEnvironment": "Aucune information de version n'est envoyée à Supertext : SUPERTEXT_VERSION_REPORTS=0 est défini sur le serveur et prime sur ce paramètre.",
     "supertextLanguageMapped": "{language} → {code}",
-    "supertextLanguageNotMapped": "{language} : non associée. Ajoutez une ligne « {language} = … » avec son code Supertext à la correspondance des langues ; d'ici là, elle n'est pas traduite.",
+    "supertextLanguageNotMapped": "{language} : aucune langue Supertext. Choisissez-en une dans sa liste déroulante de la connexion Supertext ; d'ici là, elle n'est pas traduite.",
     "supertextLanguageNoPoliteness": "(pas de ton formel/informel)",
     "supertextLanguageUnlisted": "(absent de la liste Supertext d'octobre 2026 : envoyé tel que saisi)",
     "supertextLanguageSource": "· comme langue source : {code}",
-    "supertextLanguageSourceNotMapped": "· comme langue source : non associée"
+    "supertextLanguageSourceNotMapped": "· comme langue source : non associée",
+    "supertextNothingToTranslate": "Rien à traduire.",
+    "supertextHtmlOneLanguage": "Un fichier HTML contient une seule langue cible : choisissez exactement une langue cible ou utilisez XLIFF.",
+    "supertextFileDownload": "Télécharger le fichier : {file}",
+    "supertextFileImportOpens": "Importer une traduction s’ouvre dans un nouvel onglet.",
+    "supertextFileInvalidFile": "Ce fichier n’est pas un fichier de traduction XLIFF ou HTML valide.",
+    "supertextFileMissingMetadata": "Ce fichier n’a pas été exporté par le module Supertext, ou son en-tête a été supprimé.",
+    "supertextFileTooLarge": "Le fichier est trop volumineux (10 Mo au maximum).",
+    "supertextFileInvalidJob": "Le fichier n’a pas pu être créé.",
+    "supertextFileOtherSystem": "Ce fichier appartient à un autre système ({plugin}).",
+    "supertextFileNotFound": "L’enregistrement à partir duquel ce fichier a été exporté n’existe plus.",
+    "supertextFileNoLanguage": "AtroPIM n’a pas de langue {language}.",
+    "supertextFileNotAllowed": "Vous n’êtes pas autorisé à modifier cet enregistrement.",
+    "supertextFileNoFile": "Choisissez un fichier à importer.",
+    "supertextFileJob": "{entity} {id}, {language}",
+    "supertextFileImported": "Importés : {count}",
+    "supertextFileSourceChanged": "Ignorés, source modifiée depuis l’export : {count}",
+    "supertextFileUntranslated": "Non traduits dans le fichier : {count}",
+    "supertextFileInvalidMarkup": "Mise en forme modifiée, non importés : {count}",
+    "supertextFileMissing": "Absents du fichier : {count}",
+    "supertextFileKept": "Conservés, déjà traduits dans AtroPIM : {count}",
+    "supertextFilePageTitle": "Importer une traduction",
+    "supertextFileField": "Fichier traduit (XLIFF ou HTML)",
+    "supertextFileIncludeChanged": "Importer aussi les textes dont la source a changé depuis l’export",
+    "supertextFileOverwrite": "Écraser les traductions existantes",
+    "supertextFileSubmit": "Importer une traduction",
+    "supertextFileHelp": "Téléversez un fichier exporté avec « Exporter pour traduction » et traduit depuis. Les textes sont enregistrés dans la langue cible de l’enregistrement, comme lors d’une traduction avec Supertext.",
+    "supertextFileResult": "Résultat",
+    "supertextInvalidLanguageCode": "« {code} » n'est pas une langue Supertext. Choisissez-en une dans la liste.",
+    "supertextLanguageReview": "· révision des traductions"
   }
 }

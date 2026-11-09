@@ -122,6 +122,25 @@
         }
       }
     },
+    "supertextReviewUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "trim": true,
+      "default": "https://localizationreview-production.up.railway.app/v1/",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "supertext"
+            }
+          ]
+        }
+      }
+    },
     "supertextVersionReports": {
       "type": "bool",
       "notStorable": true,

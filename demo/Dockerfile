@@ -7,8 +7,8 @@
 # Composer install of AtroPIM.
 
 # --- PHP 8.4 with AtroCore's extensions ----------------------------------------------------
-FROM public.ecr.aws/docker/library/php:8.4-apache-bookworm AS php
-ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.12.0/install-php-extensions /usr/local/bin/
+FROM mirror.gcr.io/library/php:8.4-apache-bookworm AS php
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.13.2/install-php-extensions /usr/local/bin/
 RUN install-php-extensions exif ftp gd imagick intl opcache pdo_mysql sockets zip \
  && apt-get update && apt-get install -y --no-install-recommends git unzip \
  && rm -rf /var/lib/apt/lists/* \
@@ -16,7 +16,7 @@ RUN install-php-extensions exif ftp gd imagick intl opcache pdo_mysql sockets zi
  && a2enmod mpm_prefork rewrite headers \
  && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
  && printf 'memory_limit=-1\nmax_execution_time=0\nopcache.memory_consumption=192\nopcache.max_accelerated_files=40000\n' > "$PHP_INI_DIR/conf.d/atrocore.ini"
-COPY --from=public.ecr.aws/docker/library/composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=mirror.gcr.io/library/composer:2 /usr/bin/composer /usr/bin/composer
 # PHP_PATH: AtroCore starts console subprocesses with it (otherwise it guesses from $_, which
 # is runuser when the entrypoint runs PHP as www-data).
 ENV COMPOSER_ALLOW_SUPERUSER=1 PHP_PATH=/usr/local/bin/php

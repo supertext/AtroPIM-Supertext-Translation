@@ -89,7 +89,7 @@ final class EntityTranslator
         $targets = array_values(array_diff($targets, [$source]));
 
         $settings ??= (new ConnectionResolver($this->container))->settings(null);
-        $client   = $settings->client();
+        $client   = $settings->client(ReportingFactory::moduleVersion($this->container));
 
         // Version report / key check of the Commando Center, at the end of the process (never fails this).
         ReportingFactory::afterTranslation($this->container, $settings);
@@ -125,7 +125,8 @@ final class EntityTranslator
                     $notes[] = $this->messages->text('politeness_skipped', ['language' => $target]);
                 }
 
-                $translations = $this->translateUnits($client, $plan['translate'], $values, $source, $sourceCode, $targetCode, $tone);
+                // Languages with *Translation review* on go through Supertext's review service.
+                $translations = $this->translateUnits($client->forReview($settings->review($target)), $plan['translate'], $values, $source, $sourceCode, $targetCode, $tone);
             } catch (SupertextException $e) {
                 if (\in_array($e->getCode(), [401, 403], true)) {
                     ReportingFactory::markAuthenticationFailed($e->getCode());

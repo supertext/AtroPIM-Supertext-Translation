@@ -4,10 +4,11 @@
     "supertextEnvironment": "Environnement",
     "supertextApiUrl": "URL de l'API",
     "supertextTimeout": "Délai d'attente (secondes)",
-    "supertextLanguageCodes": "Correspondance des langues",
+    "supertextLanguageCodes": "Correspondance des langues (ancien champ texte)",
     "supertextVersionReports": "Envoyer les informations de version à Supertext",
     "supertextKeyCheck": "Vérification de la clé API",
-    "supertextLanguageStatus": "Langues"
+    "supertextLanguageStatus": "Langues",
+    "supertextReviewUrl": "URL du service de révision"
   },
   "options": {
     "type": {
@@ -25,9 +26,17 @@
     "supertextEnvironment": "Live pour l'utilisation normale. Staging et Testing sont les systèmes de test de Supertext.",
     "supertextApiUrl": "URL de base de l'API Supertext, p. ex. https://api.supertext.com/v1/",
     "supertextTimeout": "Durée d'attente maximale pour une traduction (30 à 1800 secondes).",
-    "supertextLanguageCodes": "Une ligne par langue AtroPIM avec son code Supertext, p. ex. « de_DE = de-CH » ou « es_ES = es ». Les langues dont le code est déjà un code Supertext, aux majuscules et à _/- près (de_CH, fr_CH, it_IT, en_US), n'ont pas besoin de ligne ; toute autre langue doit être associée, sinon elle n'est pas traduite. Codes Supertext : allemand, anglais, français, italien et portugais avec une région (de-CH, en-US, pt-BR), zh-Hans/zh-Hant, sr-Latn/sr-Cyrl, gsw-u-sd-chzh/gsw-u-sd-chbe, toutes les autres langues sans région (es, nl, sl, …). Comme langue source, la même ligne est utilisée sans sa région (de-CH → de).",
+    "supertextLanguageCodes": "Les versions précédentes enregistraient la correspondance dans ce champ texte (une ligne par langue, p. ex. « de_DE = de-CH »). Ses lignes sont reprises dans les listes déroulantes à l'ouverture ou à l'enregistrement de la connexion ; les lignes pour des langues qu'AtroPIM n'a pas, ou avec un code que Supertext ne liste pas, restent ici et s'appliquent toujours. Les listes déroulantes priment.",
     "supertextVersionReports": "Envoie à Supertext l'URL du site ainsi que les versions de ce module, du PIM et de l'environnement d'exécution lorsque vous enregistrez ces paramètres et après une mise à jour. Le support Supertext voit ainsi quelle version vous utilisez. Aucun contenu, aucune clé API et aucune donnée personnelle ne sont transmis. SUPERTEXT_VERSION_REPORTS=0 sur le serveur le désactive pour toute l'installation.",
     "supertextKeyCheck": "La dernière vérification automatique de la clé API (à l'enregistrement de la connexion, avec « Tester la connexion » et lorsque Supertext refuse la clé) et si les informations de version sont envoyées à Supertext.",
-    "supertextLanguageStatus": "Le code Supertext sous lequel chaque langue AtroPIM est envoyée. Une langue « non associée » n'est traduite qu'une fois ajoutée à la correspondance des langues."
+    "supertextLanguageStatus": "Le code Supertext sous lequel chaque langue AtroPIM est envoyée. Une langue « sans langue Supertext » n'est traduite qu'une fois que vous en avez choisi une dans sa liste déroulante.",
+    "supertextReviewUrl": "Adresse du service de révision de Supertext, utilisée pour les langues dont la révision des traductions est cochée. Vide désactive la révision des traductions pour toutes les langues. Ne la modifiez que si Supertext vous donne une autre adresse. SUPERTEXT_REVIEW_URL sur le serveur a la priorité."
+  },
+  "labels": {
+    "supertextLanguageField": "Langue Supertext pour {language}",
+    "supertextLanguageChoose": "— choisir —",
+    "supertextLanguageFieldTooltip": "La langue Supertext vers laquelle (et, sans sa région, depuis laquelle) cette langue AtroPIM est traduite. Le code Supertext de la langue est présélectionné lorsqu'il est évident (de_CH → de-CH, de → de-DE, es_ES → es) ; des langues comme de_LI, en_IE ou fr_BE demandent un choix, sinon elles ne sont pas traduites.",
+    "supertextReviewField": "Révision des traductions",
+    "supertextReviewFieldTooltip": "Les traductions vers cette langue passent par le service de révision de Supertext, afin que les réviseurs puissent les vérifier et les corriger directement sur votre site avec l'extension Supertext Localization Review. Leurs corrections sont reprises lors de la prochaine traduction de l'enregistrement."
   }
 }

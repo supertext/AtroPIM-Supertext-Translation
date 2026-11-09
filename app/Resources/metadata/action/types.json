@@ -1,3 +1,5 @@
 {
-  "supertextTranslate": "\\SupertextTranslation\\ActionTypes\\SupertextTranslate"
+  "supertextTranslate": "\\SupertextTranslation\\ActionTypes\\SupertextTranslate",
+  "supertextExport": "\\SupertextTranslation\\ActionTypes\\SupertextExport",
+  "supertextImport": "\\SupertextTranslation\\ActionTypes\\SupertextImport"
 }

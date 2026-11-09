@@ -4,10 +4,11 @@
     "supertextEnvironment": "Umgebung",
     "supertextApiUrl": "API-URL",
     "supertextTimeout": "Zeitlimit (Sekunden)",
-    "supertextLanguageCodes": "Sprachzuordnung",
+    "supertextLanguageCodes": "Sprachzuordnung (altes Textfeld)",
     "supertextVersionReports": "Versionsinformationen an Supertext senden",
     "supertextKeyCheck": "API-Schlüssel-Prüfung",
-    "supertextLanguageStatus": "Sprachen"
+    "supertextLanguageStatus": "Sprachen",
+    "supertextReviewUrl": "URL des Prüfdienstes"
   },
   "options": {
     "type": {
@@ -25,9 +26,17 @@
     "supertextEnvironment": "Live für den normalen Betrieb. Staging und Testing sind Testsysteme von Supertext.",
     "supertextApiUrl": "Basis-URL der Supertext-API, z. B. https://api.supertext.com/v1/",
     "supertextTimeout": "Wie lange auf eine Übersetzung gewartet wird (30–1800 Sekunden).",
-    "supertextLanguageCodes": "Eine Zeile pro AtroPIM-Sprache mit ihrem Supertext-Code, z. B. \"de_DE = de-CH\" oder \"es_ES = es\". Sprachen, deren Code abgesehen von Gross-/Kleinschreibung und _/- bereits ein Supertext-Code ist (de_CH, fr_CH, it_IT, en_US), brauchen keine Zeile; jede andere Sprache muss zugeordnet werden, sonst wird sie nicht übersetzt. Supertext-Codes: Deutsch, Englisch, Französisch, Italienisch und Portugiesisch mit Region (de-CH, en-US, pt-BR), zh-Hans/zh-Hant, sr-Latn/sr-Cyrl, gsw-u-sd-chzh/gsw-u-sd-chbe, alle anderen Sprachen ohne Region (es, nl, sl, …). Als Ausgangssprache gilt dieselbe Zeile ohne Region (de-CH → de).",
+    "supertextLanguageCodes": "Frühere Versionen speicherten die Zuordnung in diesem Textfeld (eine Zeile pro Sprache, z. B. \"de_DE = de-CH\"). Seine Zeilen werden beim Öffnen oder Speichern der Verbindung in die Auswahlfelder übernommen; Zeilen für Sprachen, die AtroPIM nicht hat, oder mit einem Code, den Supertext nicht aufführt, bleiben hier und gelten weiter. Die Auswahlfelder haben Vorrang.",
     "supertextVersionReports": "Sendet die URL der Website sowie die Versionen dieses Moduls, des PIM und der Laufzeitumgebung an Supertext, wenn Sie diese Einstellungen speichern und nach einem Update. So sieht der Supertext-Support, welche Version Sie einsetzen. Es werden keine Inhalte, kein API-Schlüssel und keine Personendaten übertragen. SUPERTEXT_VERSION_REPORTS=0 auf dem Server schaltet es für die ganze Installation aus.",
     "supertextKeyCheck": "Die letzte automatische Prüfung des API-Schlüssels (beim Speichern der Verbindung, bei «Verbindung testen» und wenn Supertext den Schlüssel ablehnt) und ob Versionsinformationen an Supertext gesendet werden.",
-    "supertextLanguageStatus": "Der Supertext-Code, mit dem jede AtroPIM-Sprache gesendet wird. Eine Sprache, die «nicht zugeordnet» ist, wird erst übersetzt, wenn Sie sie in der Sprachzuordnung ergänzen."
+    "supertextLanguageStatus": "Der Supertext-Code, mit dem jede AtroPIM-Sprache gesendet wird. Eine Sprache «ohne Supertext-Sprache» wird erst übersetzt, wenn Sie in ihrem Auswahlfeld eine wählen.",
+    "supertextReviewUrl": "Adresse des Prüfdienstes von Supertext, verwendet für die Sprachen mit angehakter Übersetzungsprüfung. Leer schaltet die Übersetzungsprüfung für alle Sprachen aus. Ändern Sie sie nur, wenn Supertext Ihnen eine andere Adresse gibt. SUPERTEXT_REVIEW_URL auf dem Server hat Vorrang."
+  },
+  "labels": {
+    "supertextLanguageField": "Supertext-Sprache für {language}",
+    "supertextLanguageChoose": "— bitte wählen —",
+    "supertextLanguageFieldTooltip": "Die Supertext-Sprache, in die (und, ohne Region, aus der) diese AtroPIM-Sprache übersetzt wird. Vorausgewählt ist der Supertext-Code der Sprache, wo es einen naheliegenden gibt (de_CH → de-CH, de → de-DE, es_ES → es); Sprachen wie de_LI, en_IE oder fr_BE brauchen eine Auswahl, sonst werden sie nicht übersetzt.",
+    "supertextReviewField": "Übersetzungsprüfung",
+    "supertextReviewFieldTooltip": "Übersetzungen in diese Sprache laufen über den Prüfdienst von Supertext, damit Prüferinnen und Prüfer sie mit der Erweiterung Supertext Localization Review direkt auf Ihrer Website kontrollieren und korrigieren können. Ihre Korrekturen werden beim nächsten Übersetzen des Datensatzes übernommen."
   }
 }

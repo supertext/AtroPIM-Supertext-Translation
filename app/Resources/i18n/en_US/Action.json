@@ -4,11 +4,14 @@
     "supertextSourceLanguage": "Source language",
     "supertextTargetLanguages": "Target languages",
     "supertextOverwrite": "Overwrite existing translations",
-    "supertextPoliteness": "Form of address"
+    "supertextPoliteness": "Form of address",
+    "supertextFileFormat": "File format"
   },
   "options": {
     "type": {
-      "supertextTranslate": "Translate with Supertext"
+      "supertextTranslate": "Translate with Supertext",
+      "supertextExport": "Export for translation",
+      "supertextImport": "Import translation"
     },
     "supertextSourceLanguage": {
       "": "Main language"
@@ -17,6 +20,10 @@
       "": "Default",
       "more": "Formal",
       "less": "Informal"
+    },
+    "supertextFileFormat": {
+      "xliff": "XLIFF 1.2 (for translation tools)",
+      "html": "HTML (one language per file)"
     }
   },
   "tooltips": {
@@ -24,7 +31,8 @@
     "supertextSourceLanguage": "The language to translate from. Empty: the main language.",
     "supertextTargetLanguages": "The languages to translate into. Empty: every other language.",
     "supertextOverwrite": "Off: fields that already have text in a target language are kept. On: they are replaced by the new translation.",
-    "supertextPoliteness": "Formal or informal form of address, for languages that have both (e.g. Sie/du in German). Supertext doesn't offer it for every language (not e.g. for English, Romansh or Albanian): those are translated with the default tone, and the result says so."
+    "supertextPoliteness": "Formal or informal form of address, for languages that have both (e.g. Sie/du in German). Supertext doesn't offer it for every language (not e.g. for English, Romansh or Albanian): those are translated with the default tone, and the result says so.",
+    "supertextFileFormat": "Export for translation: XLIFF 1.2 for translation tools (one file for all target languages), or HTML (one target language per file, e.g. for Supertext's web app)."
   },
   "messages": {
     "supertextKeyHelp": "No Supertext account yet? Create one at https://www.supertext.com/person/en/account/signin. Generate your API key at https://www.supertext.com/en/integrations/api (supertext.com → Integrations → API; requires the Admin role).",
@@ -62,7 +70,7 @@
     "supertextNoTargets": "No other languages to translate into.",
     "supertextRecordsTranslated": "Supertext translated {done} of {total} records.",
     "supertextRecordsFailed": "The Executions panel of the action shows why.",
-    "supertextUnsupportedLanguage": "The language {language} has no Supertext language yet. Ask your administrator to map it in the language mapping of the Supertext connection (Administration → Connections), e.g. \"de_DE = de-CH\".",
+    "supertextUnsupportedLanguage": "The language {language} has no Supertext language yet. Ask your administrator to choose one for it in the Supertext connection (Administration → Connections → the Supertext connection → \"Supertext language for {language}\").",
     "supertextUnsupportedFeature": "Supertext offers no formal or informal tone for this language. Set the action's form of address to Default.",
     "supertextPolitenessSkipped": "Supertext offers no formal or informal tone for {language}: translated with the default tone.",
     "supertextKeyCheckOk": "API key checked: the connection to Supertext works.",
@@ -76,10 +84,39 @@
     "supertextReportsOff": "Version information is not sent to Supertext.",
     "supertextReportsOffEnvironment": "Version information is not sent to Supertext: SUPERTEXT_VERSION_REPORTS=0 is set on the server and overrides this setting.",
     "supertextLanguageMapped": "{language} → {code}",
-    "supertextLanguageNotMapped": "{language}: not mapped. Add a line \"{language} = …\" with its Supertext code to the language mapping; until then it isn't translated.",
+    "supertextLanguageNotMapped": "{language}: no Supertext language. Choose one in its combo box on the Supertext connection; until then it isn't translated.",
     "supertextLanguageNoPoliteness": "(no formal/informal tone)",
     "supertextLanguageUnlisted": "(not in Supertext's list of October 2026: sent as entered)",
     "supertextLanguageSource": "· as source language: {code}",
-    "supertextLanguageSourceNotMapped": "· as source language: not mapped"
+    "supertextLanguageSourceNotMapped": "· as source language: not mapped",
+    "supertextNothingToTranslate": "Nothing to translate.",
+    "supertextHtmlOneLanguage": "An HTML file holds one target language: choose exactly one target language, or use XLIFF.",
+    "supertextFileDownload": "Download file: {file}",
+    "supertextFileImportOpens": "Import translation opens in a new tab.",
+    "supertextFileInvalidFile": "This file isn't a valid XLIFF or HTML translation file.",
+    "supertextFileMissingMetadata": "This file wasn't exported by the Supertext module, or its header was removed.",
+    "supertextFileTooLarge": "The file is too large (at most 10 MB).",
+    "supertextFileInvalidJob": "The file could not be created.",
+    "supertextFileOtherSystem": "This file belongs to another system ({plugin}).",
+    "supertextFileNotFound": "The record this file was exported from no longer exists.",
+    "supertextFileNoLanguage": "AtroPIM has no language {language}.",
+    "supertextFileNotAllowed": "You may not edit this record.",
+    "supertextFileNoFile": "Choose a file to import.",
+    "supertextFileJob": "{entity} {id}, {language}",
+    "supertextFileImported": "Imported: {count}",
+    "supertextFileSourceChanged": "Skipped, source changed since the export: {count}",
+    "supertextFileUntranslated": "Not translated in the file: {count}",
+    "supertextFileInvalidMarkup": "Formatting changed, not imported: {count}",
+    "supertextFileMissing": "Not in the file: {count}",
+    "supertextFileKept": "Kept, already translated in AtroPIM: {count}",
+    "supertextFilePageTitle": "Import translation",
+    "supertextFileField": "Translated file (XLIFF or HTML)",
+    "supertextFileIncludeChanged": "Also import texts whose source changed since the export",
+    "supertextFileOverwrite": "Overwrite existing translations",
+    "supertextFileSubmit": "Import translation",
+    "supertextFileHelp": "Upload a file exported with Export for translation and translated since. The texts are saved in the record's target language, like a translation with Supertext.",
+    "supertextFileResult": "Result",
+    "supertextInvalidLanguageCode": "\"{code}\" is not a Supertext language. Choose one from the list.",
+    "supertextLanguageReview": "· translation review"
   }
 }

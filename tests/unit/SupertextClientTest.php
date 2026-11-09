@@ -217,4 +217,60 @@ final class SupertextClientTest extends TestCase
         self::assertSame(SupertextClient::STAGING, SupertextClient::baseUrlFor('staging'));
         self::assertSame('http://127.0.0.1:8765/v1/', SupertextClient::baseUrlFor('live', 'http://127.0.0.1:8765/v1/'));
     }
+
+    public function testTranslationReviewGoesThroughTheReviewService(): void
+    {
+        $handler = static fn (string $method, string $url): array => match (true) {
+            $method === 'POST'                => ['status' => 200, 'body' => '{"file_id":"f1"}'],
+            str_ends_with($url, '/status')    => ['status' => 200, 'body' => '{"status":"done"}'],
+            str_ends_with($url, '/translation') => ['status' => 200, 'body' => '<div data-st-id="0">Hallo</div>'],
+            default                           => ['status' => 200, 'body' => '{}'],
+        };
+        $transport = function (string $method, string $url, array $headers, ?string $body) use ($handler): array {
+            $this->calls[] = compact('method', 'url', 'headers', 'body');
+
+            return $handler($method, $url) + ['headers' => []];
+        };
+        $client = new SupertextClient('test-key', 'https://api.test/v1/', $transport, 10, 0.01, static function (): void {
+        }, reviewUrl: 'https://review.test/v1/', pluginVersion: '1.2.3');
+
+        $review = $client->forReview(true);
+        self::assertNotSame($client, $review);
+        self::assertSame($review, $client->forReview(true), 'created once');
+        self::assertSame($client, $client->forReview(false));
+
+        $review->translateDocument('<div data-st-id="0">Hello</div>', 'de-CH', 'en');
+        self::assertSame(
+            ['POST https://review.test/v1/translate/ai/file', 'GET https://review.test/v1/translate/ai/file/f1/status', 'GET https://review.test/v1/translate/ai/file/f1/translation', 'DELETE https://review.test/v1/translate/ai/file/f1'],
+            array_map(static fn (array $c): string => $c['method'] . ' ' . $c['url'], $this->calls),
+            'upload, status, download and delete all at the review service'
+        );
+        self::assertSame('Supertext-Auth-Key test-key', $this->calls[0]['headers']['Authorization'], 'same key');
+        self::assertStringContainsString('AtroPIM-Supertext-Translation/1.2.3', $this->calls[0]['headers']['User-Agent'], 'User-Agent with the version');
+
+        $this->calls = [];
+        $client->forReview(false)->translateDocument('<div data-st-id="0">Hello</div>', 'fr-CH', 'en');
+        self::assertCount(4, $this->calls);
+        foreach ($this->calls as $call) {
+            self::assertStringStartsWith('https://api.test/v1/', $call['url'], 'other languages go directly to Supertext');
+        }
+        self::assertStringContainsString('AtroPIM-Supertext-Translation/1.2.3', $this->calls[0]['headers']['User-Agent']);
+    }
+
+    public function testNoReviewClientWithoutAReviewUrl(): void
+    {
+        $transport = static fn (): array => ['status' => 200, 'body' => '{}', 'headers' => []];
+        $off       = new SupertextClient('k', 'https://api.test/v1/', $transport, reviewUrl: '');
+        $same      = new SupertextClient('k', 'https://api.test/v1/', $transport, reviewUrl: 'https://api.test/v1');
+
+        self::assertSame($off, $off->forReview(true), 'empty review URL: review off');
+        self::assertSame($same, $same->forReview(true), 'the same URL as the API: no second client');
+        self::assertSame('https://localizationreview-production.up.railway.app/v1/', SupertextClient::REVIEW_URL);
+    }
+
+    public function testUserAgentWithoutAVersion(): void
+    {
+        $this->client(static fn (): array => ['status' => 200, 'body' => '{"features":[]}'])->validateApiKey();
+        self::assertStringContainsString('AtroPIM-Supertext-Translation/dev', $this->calls[0]['headers']['User-Agent']);
+    }
 }

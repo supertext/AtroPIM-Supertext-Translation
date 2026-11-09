@@ -13,7 +13,7 @@ namespace SupertextTranslation\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Listeners\AbstractLayoutListener;
 
-/** Adds the Supertext options to the Action form; they are only visible for "Translate with Supertext". */
+/** Adds the Supertext options to the Action form; they are only visible for the Supertext action types. */
 class ActionLayout extends AbstractLayoutListener
 {
     public const ROWS = [
@@ -22,13 +22,19 @@ class ActionLayout extends AbstractLayoutListener
         [['name' => 'supertextOverwrite'], false],
     ];
 
+    /** "Export for translation" only; added on its own so layouts customised before it get it too. */
+    public const FILE_ROWS = [
+        [['name' => 'supertextFileFormat'], false],
+    ];
+
     public function detail(Event $event): void
     {
         if ($this->isRelatedLayout($event)) {
             return;
         }
 
-        $event->setArgument('result', self::addRows($event->getArgument('result'), self::ROWS, 'supertextConnection'));
+        $layout = self::addRows($event->getArgument('result'), self::ROWS, 'supertextConnection');
+        $event->setArgument('result', self::addRows($layout, self::FILE_ROWS, 'supertextFileFormat'));
     }
 
     /**

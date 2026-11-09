@@ -8,9 +8,12 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "equals",
+              "type": "in",
               "attribute": "type",
-              "value": "supertextTranslate"
+              "value": [
+                "supertextTranslate",
+                "supertextExport"
+              ]
             }
           ]
         }
@@ -30,9 +33,12 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "equals",
+              "type": "in",
               "attribute": "type",
-              "value": "supertextTranslate"
+              "value": [
+                "supertextTranslate",
+                "supertextExport"
+              ]
             }
           ]
         }
@@ -49,9 +55,12 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "equals",
+              "type": "in",
               "attribute": "type",
-              "value": "supertextTranslate"
+              "value": [
+                "supertextTranslate",
+                "supertextExport"
+              ]
             }
           ]
         }
@@ -68,9 +77,12 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "equals",
+              "type": "in",
               "attribute": "type",
-              "value": "supertextTranslate"
+              "value": [
+                "supertextTranslate",
+                "supertextExport"
+              ]
             }
           ]
         }
@@ -95,6 +107,29 @@
               "type": "equals",
               "attribute": "type",
               "value": "supertextTranslate"
+            }
+          ]
+        }
+      },
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true
+    },
+    "supertextFileFormat": {
+      "type": "enum",
+      "options": [
+        "xliff",
+        "html"
+      ],
+      "default": "xliff",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "supertextExport"
             }
           ]
         }

@@ -11,11 +11,17 @@ class CommandTest extends TestCase
     public function testParsesArguments(): void
     {
         self::assertSame(
-            ['entityType' => 'Product', 'id' => 'abc', 'targets' => ['de_CH', 'fr_CH'], 'overwrite' => true, 'source' => 'en_US', 'politeness' => 'more'],
+            ['entityType' => 'Product', 'id' => 'abc', 'targets' => ['de_CH', 'fr_CH'], 'overwrite' => true, 'source' => 'en_US', 'politeness' => 'more', 'format' => 'xliff', 'output' => '', 'includeChanged' => false],
             CommandArguments::parse(' Product  abc de_CH,fr_CH --overwrite --source=en_US --politeness=more'),
         );
         self::assertSame([], CommandArguments::parse('Product abc all')['targets']);
         self::assertSame('', CommandArguments::parse('')['entityType']);
+
+        $export = CommandArguments::parse('Product abc de_CH --format=html --output=/tmp/p.html');
+        self::assertSame(['html', '/tmp/p.html'], [$export['format'], $export['output']]);
+
+        $import = CommandArguments::parse('/tmp/p.xlf --include-changed');
+        self::assertSame(['/tmp/p.xlf', true, false], [$import['entityType'], $import['includeChanged'], $import['overwrite']]);
     }
 
     public function testSummary(): void

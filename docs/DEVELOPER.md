@@ -147,7 +147,7 @@ New fields in `entityDefs` get their database columns from AtroCore's schema dif
 ## Tests
 
 ```bash
-phpunit                                                   # PHPUnit 11, no AtroCore needed
+phpunit                                                   # PHPUnit 13, no AtroCore needed
 find app tests demo -name '*.php' -print0 | xargs -0 -n1 php -l
 ```
 

@@ -5,3 +5,4 @@
 node_modules
 /tests/docs/movie/out/
 /tests/docs/movie/voice-cache/
+/tests/e2e/artifacts/

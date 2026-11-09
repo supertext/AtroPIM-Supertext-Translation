@@ -4,6 +4,10 @@ All notable changes to Supertext Translation for AtroPIM.
 
 ## Unreleased
 
+## 1.0.0 — 2026-11-09
+
+First stable release. Every plugin release is now tested end to end against the live Supertext API (`.github/workflows/e2e.yml`).
+
 ### Added
 - **Translation review** on/off per language on the Supertext connection (a checkbox next to each language's *Supertext language for …*): translations into a language with *Translation review* ticked go through Supertext's review service (Supertext Localization Review), where customers and Supertext linguists correct them on the website with a Chrome extension; corrections come back into AtroPIM with the next translation (with *Overwrite existing translations*), and texts translated before keep their (reviewed) wording. Same API key, billing, languages and messages; other languages keep going directly to Supertext. New connection setting *Review service URL* (`supertextReviewUrl`, defaults to Supertext's review service; empty turns review off everywhere; `SUPERTEXT_REVIEW_URL` overrides it). The **Languages** field and `supertext check` mark review languages. Off for existing connections. All four interface languages.
 - Requests to Supertext name the module's version in the User-Agent (`AtroPIM-Supertext-Translation/<version>`).

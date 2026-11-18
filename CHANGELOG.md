@@ -4,9 +4,6 @@ All notable changes to Supertext Translation for AtroPIM.
 
 ## Unreleased
 
-### Changed
-- Tested with AtroCore 2.7.6 and AtroPIM 1.17.0: the demo and CI now install them instead of AtroCore 2.6.7 and AtroPIM 1.16.11. AtroCore 2.4 and AtroPIM 1.16 stay supported.
-
 ## 1.0.0 — 2026-11-09
 
 First stable release. Every plugin release is now tested end to end against the live Supertext API (`.github/workflows/e2e.yml`).

@@ -176,7 +176,7 @@ BASE_URL=http://127.0.0.1:8081 DATABASE_URL=mysql://user:pass@127.0.0.1:3306/atr
 
 ## Demo (Railway)
 
-`demo/` builds one image (`demo/Dockerfile`, build context = repository root; `railway.json` points Railway at it): PHP 8.4 + Apache with AtroCore 2.6.7, AtroPIM 1.16.11 and this module, plus AtroCore's job runner (`console.php cron` every minute). MySQL is a separate service.
+`demo/` builds one image (`demo/Dockerfile`, build context = repository root; `railway.json` points Railway at it): PHP 8.4 + Apache with AtroCore 2.7.6, AtroPIM 1.17.0 and this module, plus AtroCore's job runner (`console.php cron` every minute). MySQL is a separate service.
 
 On every start `demo/docker/entrypoint.sh`:
 

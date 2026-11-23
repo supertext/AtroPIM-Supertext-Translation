@@ -265,7 +265,7 @@ Before starting work in this repo, look at its open findings: code scanning aler
 
 ## Dependency updates
 
-Dependabot (`.github/dependabot.yml`) opens weekly pull requests: minor and patch updates grouped into one, GitHub Actions in another, each major update on its own.
+Dependabot (`.github/dependabot.yml`) opens weekly pull requests: minor and patch updates grouped into one, GitHub Actions in another, each major update on its own. AtroCore isn't on Packagist, so `composer.json` names AtroCore's own package repository (`repositories`); without it Dependabot can't resolve `atrocore/core` and its Composer update fails. Composer ignores a package's `repositories` when the module is installed into AtroPIM, so this changes nothing for users.
 
 `.github/workflows/dependabot-merge.yml` merges a minor or patch package update by itself once every other check on its pull request has passed (it waits up to 85 minutes and leaves the pull request alone if a check fails). GitHub Actions updates and majors stay for a person: the workflow's built-in token can't merge changes to workflow files, and a major needs a decision. Merges by the workflow don't start CI on `main`; the weekly health check looks at `main`.
 

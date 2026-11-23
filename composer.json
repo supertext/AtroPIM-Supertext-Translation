@@ -19,6 +19,9 @@
   "require-dev": {
     "phpunit/phpunit": "^13.4"
   },
+  "repositories": [
+    {"type": "composer", "url": "https://packagist.atrocore.com/packages.json?id=supertext-demo"}
+  ],
   "autoload": {
     "psr-4": {
       "SupertextTranslation\\": "app/",

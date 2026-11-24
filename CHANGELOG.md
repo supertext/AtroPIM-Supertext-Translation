@@ -4,6 +4,9 @@ All notable changes to Supertext Translation for AtroPIM.
 
 ## Unreleased
 
+- Added: **Send configuration to Supertext**, a new action type (a button on the Supertext connection; the demo has it) and the console command `supertext send-configuration`: sends Supertext the installed modules (name, version) and the Supertext language of each language, so Supertext support can help better. Nothing is sent while version information is off. All four interface languages. Supertext Plugin Health 0.4.0.
+- Changed: the screenshots in the guides show real Supertext translations (the E2E workflow takes them with the live API; version reports still go to the stand-in).
+
 ## 1.0.0 — 2026-11-09
 
 First stable release. Every plugin release is now tested end to end against the live Supertext API (`.github/workflows/e2e.yml`).

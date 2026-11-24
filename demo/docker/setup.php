@@ -157,7 +157,7 @@ function demo_content(Container $c): void
         demo_log("Added the sample product $number");
     }
 
-    // The Supertext connection (no key: the module uses SUPERTEXT_API_KEY) and the action.
+    // The Supertext connection (no key: the module uses SUPERTEXT_API_KEY) and the actions.
     $connection = demo_find($c, 'Connection', ['type' => 'supertext']);
 
     if ($connection === null) {
@@ -183,6 +183,21 @@ function demo_content(Container $c): void
             'supertextConnectionId' => $connection->get('id'),
         ]);
         demo_log('Added the action "Translate with Supertext"');
+    }
+
+    // "Send configuration to Supertext" as a button on the Supertext connection (administrators).
+    if (demo_find($c, 'Action', ['type' => 'supertextSendConfiguration']) === null) {
+        $services->create('Action')->createEntity((object) [
+            'name'         => 'Send configuration to Supertext',
+            'type'         => 'supertextSendConfiguration',
+            'usage'        => 'record',
+            'sourceEntity' => 'Connection',
+            'display'      => 'single',
+            'massAction'   => false,
+            'executeAs'    => 'sameUser',
+            'isActive'     => true,
+        ]);
+        demo_log('Added the action "Send configuration to Supertext"');
     }
 
     $role = demo_role($c);

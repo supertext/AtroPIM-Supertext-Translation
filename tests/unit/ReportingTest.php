@@ -36,7 +36,7 @@ final class ReportingTest extends TestCase
         putenv('SUPERTEXT_VERSION_REPORTS');
     }
 
-    private function reporting(?bool $setting = null, string $pluginVersion = '1.2.0', string $systemVersion = '1.16.10', bool $failingStore = false): Reporting
+    private function reporting(?bool $setting = null, string $pluginVersion = '1.2.0', string $systemVersion = '1.16.10', bool $failingStore = false, ?callable $languages = null): Reporting
     {
         $transport = new CallableTransport(function (string $method, string $url, array $headers, ?string $body): array {
             $this->calls[] = ['method' => $method, 'url' => $url, 'body' => $body, 'agent' => $headers['User-Agent'] ?? ''];
@@ -68,6 +68,7 @@ final class ReportingTest extends TestCase
             sleep: static function (): void {
             },
             now: fn (): float => $this->now,
+            languages: $languages,
         );
     }
 
@@ -139,7 +140,8 @@ final class ReportingTest extends TestCase
         $this->reporting()->afterSettingsSaved('secret-key');
         self::assertSame('settings_saved', $this->reports()[0]['event']);
         self::assertSame(
-            ['reportedVersions', 'reportedKeyStatus', 'lastFailureAt', 'keyCheck'],
+            // Plugin Health 0.2+ adds keyChecks and reportedKeyStatuses (null with one key).
+            ['reportedVersions', 'reportedKeyStatus', 'lastFailureAt', 'keyCheck', 'keyChecks', 'reportedKeyStatuses'],
             array_keys(json_decode((string) $this->stored, true)),
             'same stored format',
         );
@@ -232,6 +234,33 @@ final class ReportingTest extends TestCase
         $this->now += 3601;
         $this->reporting()->onRequest('secret-key');
         self::assertSame('installed', $this->reports()[0]['event']);
+    }
+
+    public function testSendConfigurationSendsModulesAndTheLanguageMappingNow(): void
+    {
+        $languages = [['code' => 'en_US', 'supertext' => 'en-US'], ['code' => 'de_CH', 'supertext' => 'de-CH'], ['code' => 'fr_BE', 'supertext' => null]];
+        $modules   = [['name' => 'atrocore/pim', 'version' => '1.16.10', 'active' => true, 'type' => 'module']];
+
+        // Within the hour after a failed report: still sent, the administrator asked for it.
+        $this->centerStatus = 503;
+        $this->reporting()->afterSettingsSaved('secret-key');
+        $this->calls        = [];
+        $this->centerStatus = 202;
+
+        $result = $this->reporting(languages: static fn (): array => $languages)->sendConfiguration($modules);
+
+        self::assertSame('extensions', $result?->event);
+        self::assertTrue($result->sent);
+        [$report] = $this->reports();
+        self::assertSame('extensions', $report['event']);
+        self::assertSame($modules, $report['extensions']);
+        self::assertSame($languages, $report['languages']);
+    }
+
+    public function testSendConfigurationSendsNothingWithReportsOff(): void
+    {
+        self::assertFalse((bool) $this->reporting(false)->sendConfiguration([['name' => 'atrocore/pim']])?->sent);
+        self::assertSame([], $this->reports());
     }
 
     public function testABrokenStoreNeverFails(): void

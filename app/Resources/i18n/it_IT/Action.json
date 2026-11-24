@@ -11,7 +11,8 @@
     "type": {
       "supertextTranslate": "Traduci con Supertext",
       "supertextExport": "Esporta per la traduzione",
-      "supertextImport": "Importa traduzione"
+      "supertextImport": "Importa traduzione",
+      "supertextSendConfiguration": "Invia la configurazione a Supertext"
     },
     "supertextSourceLanguage": {
       "": "Lingua principale"
@@ -117,6 +118,9 @@
     "supertextFileHelp": "Carichi un file esportato con «Esporta per la traduzione» e nel frattempo tradotto. I testi vengono salvati nella lingua di destinazione del record, come in una traduzione con Supertext.",
     "supertextFileResult": "Risultato",
     "supertextInvalidLanguageCode": "«{code}» non è una lingua Supertext. Ne scelga una dall'elenco.",
-    "supertextLanguageReview": "· revisione delle traduzioni"
+    "supertextLanguageReview": "· revisione delle traduzioni",
+    "supertextConfigOff": "Attivi «Inviare le informazioni sulla versione a Supertext» nella connessione Supertext per inviare la configurazione.",
+    "supertextConfigSent": "Inviato a Supertext: {extensions} moduli, {languages} lingue.",
+    "supertextConfigFailed": "Non è stato possibile inviare la configurazione. Riprovi più tardi."
   }
 }

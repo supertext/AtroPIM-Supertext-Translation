@@ -11,7 +11,8 @@
     "type": {
       "supertextTranslate": "Mit Supertext übersetzen",
       "supertextExport": "Für Übersetzung exportieren",
-      "supertextImport": "Übersetzung importieren"
+      "supertextImport": "Übersetzung importieren",
+      "supertextSendConfiguration": "Konfiguration an Supertext senden"
     },
     "supertextSourceLanguage": {
       "": "Hauptsprache"
@@ -117,6 +118,9 @@
     "supertextFileHelp": "Laden Sie eine Datei hoch, die mit «Für Übersetzung exportieren» exportiert und inzwischen übersetzt wurde. Die Texte werden in der Zielsprache des Datensatzes gespeichert, wie bei einer Übersetzung mit Supertext.",
     "supertextFileResult": "Ergebnis",
     "supertextInvalidLanguageCode": "«{code}» ist keine Supertext-Sprache. Wählen Sie eine aus der Liste.",
-    "supertextLanguageReview": "· Übersetzungsprüfung"
+    "supertextLanguageReview": "· Übersetzungsprüfung",
+    "supertextConfigOff": "Schalten Sie in der Supertext-Verbindung „Versionsinformationen an Supertext senden“ ein, um die Konfiguration zu senden.",
+    "supertextConfigSent": "An Supertext gesendet: {extensions} Module, {languages} Sprachen.",
+    "supertextConfigFailed": "Die Konfiguration konnte nicht gesendet werden. Bitte versuchen Sie es später erneut."
   }
 }

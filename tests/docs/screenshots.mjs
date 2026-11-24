@@ -60,7 +60,7 @@ async function around(page, selectors, padding = 12) {
  * a copy is pinned where the message appears.
  */
 async function successToast(page, text, name) {
-  await page.waitForFunction((t) => [...document.querySelectorAll('.toastify.toast-success')].some((e) => e.textContent.includes(t)), text, { timeout: 120_000, polling: 50 })
+  await page.waitForFunction((t) => [...document.querySelectorAll('.toastify.toast-success')].some((e) => e.textContent.includes(t)), text, { timeout: 300_000, polling: 50 })
   await page.evaluate((t) => {
     const toast = [...document.querySelectorAll('.toastify.toast-success')].find((e) => e.textContent.includes(t))
     const copy = toast.cloneNode(true)

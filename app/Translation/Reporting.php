@@ -64,6 +64,7 @@ final class Reporting
      * @param \Closure(string): void      $save
      * @param (callable(float): void)|null $sleep tests
      * @param (callable(): float)|null     $now   tests
+     * @param (callable(): list<array{code: string, supertext: ?string}>)|null $languages the language mapping, for sendConfiguration()
      */
     public static function create(
         ?bool $setting,
@@ -78,6 +79,7 @@ final class Reporting
         ?string $reportUrl = null,
         ?callable $sleep = null,
         ?callable $now = null,
+        ?callable $languages = null,
     ): self {
         $enabled  = InstallationReporter::reportsEnabled($setting);
         $siteUrl  = rtrim(trim($siteUrl), '/');
@@ -102,6 +104,7 @@ final class Reporting
             reportUrl: $reportUrl,
             transport: $transport !== null ? new ReportTransport($transport) : null,
             now: $now,
+            languages: $languages,
         );
 
         return new self($reporter, $load, $save, $enabled, $callback);
@@ -171,6 +174,17 @@ final class Reporting
         $this->testConnection($apiKey);
 
         return $this->run(fn (?ReporterState $state): ReporterResult => $this->reporter->reportCheck($state));
+    }
+
+    /**
+     * "Send configuration to Supertext": one `extensions` report with the installed modules and the
+     * language mapping, sent now (also within the hour after a failed report). Nothing with reports off.
+     *
+     * @param list<array{name: string, version?: ?string, active?: ?bool, type?: ?string}> $extensions
+     */
+    public function sendConfiguration(array $extensions): ?ReporterResult
+    {
+        return $this->run(fn (?ReporterState $state): ReporterResult => $this->reporter->sendExtensions($state, $extensions));
     }
 
     /** The latest stored key check, for the connection page. */

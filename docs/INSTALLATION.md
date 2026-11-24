@@ -203,6 +203,8 @@ Turn it off by unticking the setting on the Supertext connection, or for the who
 
 **The API key check** runs whether or not version information is sent: when the connection is saved, on **Test connection**, on `supertext check`, when the key changed since the last check (compared by a fingerprint, never the key itself), and when Supertext rejects the key during a translation (then without another request). It is Supertext's cost-free `features` call; nothing is translated or billed. The connection's **API key check** field shows the latest result with its time.
 
+**Send configuration to Supertext** sends Supertext, on demand, the modules installed in AtroCore (Composer name and version, as *Administration → Updates & Modules* lists them) and the Supertext language of each language, so Supertext support can help with a setup question. It sends nothing else, and only while version information is on. It is an action type like *Translate with Supertext*: **Administration → Actions → Create**, **Type** *Send configuration to Supertext*, **Usage** *Record*, **Source entity** *Connection*, **Display** *Single*, **Mass action** off. The button then appears on the connections (use **Conditions** to show it only on the Supertext connection, and roles to keep it for administrators); clicking it shows how many modules and languages were sent. `php console.php "supertext send-configuration"` does the same from the console.
+
 **The ping endpoint** `GET <Site URL>/api/supertext/ping?challenge=…` is public (no login, no session) and answers only `{"ok":true,"plugin":"AtroPIM-Supertext-Translation","challenge":"…"}` with `Cache-Control: no-store`, so Supertext can see that the site is reachable from the internet. It returns nothing else: no versions, no settings, no data. A firewall or proxy in front of AtroPIM must let it through for the check to succeed; nothing else depends on it.
 
 The module keeps its reporter state (what was reported last, the latest key check with the key's fingerprint) in AtroCore's configuration file (`data/config.php`, key `supertextReporter`); it is never sent to the browser.
@@ -225,6 +227,7 @@ Turn it on per language that is translated **into**: **Administration → Connec
 
 ```bash
 php console.php "supertext check"                                  # version, languages and their Supertext codes, connection, key check, version reports
+php console.php "supertext send-configuration"                     # sends Supertext the installed modules and the language mapping (for support)
 php console.php "supertext translate Product <id>"                 # into all other languages
 php console.php "supertext translate Product <id> de_CH,fr_CH --overwrite --politeness=more"
 php console.php "supertext translate Category <id> all --source=de_CH"

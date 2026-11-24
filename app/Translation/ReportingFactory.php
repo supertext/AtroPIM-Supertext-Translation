@@ -29,7 +29,7 @@ final class ReportingFactory
     private static bool $scheduled = false;
     private static ?int $authenticationFailed = null;
 
-    public static function create(Container $container, Settings $settings): Reporting
+    public static function create(Container $container, Settings $settings, ?callable $languages = null): Reporting
     {
         $config = $container->get('config');
         $system = self::system($container);
@@ -49,7 +49,53 @@ final class ReportingFactory
                 $config->set(Reporting::STATE_KEY, $state);
                 $config->save();
             },
+            languages: $languages,
         );
+    }
+
+    /**
+     * "Send configuration to Supertext" (action type supertextSendConfiguration, `supertext send-configuration`):
+     * the installed AtroCore modules and every language with its Supertext code, in one report.
+     *
+     * @return array{result: ?\SupertextTranslation\PluginHealth\ReporterResult, enabled: bool, extensions: int, languages: int}
+     */
+    public static function sendConfiguration(Container $container, Settings $settings): array
+    {
+        $languages = [];
+
+        foreach (ConnectionStatus::languages($container)[0] as $language) {
+            $languages[] = ['code' => $language, 'supertext' => $settings->languageCodeOrNull($language)];
+        }
+
+        $extensions = self::modules($container);
+        $reporting  = self::create($container, $settings, static fn (): array => $languages);
+
+        return [
+            'result'     => $reporting->isEnabled() ? $reporting->sendConfiguration($extensions) : null,
+            'enabled'    => $reporting->isEnabled(),
+            'extensions' => \count($extensions),
+            'languages'  => \count($languages),
+        ];
+    }
+
+    /** @return list<array{name: string, version: ?string, active: bool, type: string}> the installed modules (Administration → Updates & Modules) */
+    public static function modules(Container $container): array
+    {
+        $out = [];
+
+        try {
+            foreach ($container->get('moduleManager')->getModules() as $id => $module) {
+                $version = (string) $module->getVersion();
+                $name    = (string) $module->getComposerName();
+                $out[]   = ['name' => $name !== '' && $name !== '-' ? $name : (string) $id, 'version' => $version !== '' ? ltrim($version, 'v') : null, 'active' => true, 'type' => 'module'];
+            }
+        } catch (\Throwable) {
+            // A report without modules is still useful (languages).
+        }
+
+        usort($out, static fn (array $a, array $b): int => strcmp($a['name'], $b['name']));
+
+        return $out;
     }
 
     /** AtroCore's site URL; without one (rare) the request's own host. */

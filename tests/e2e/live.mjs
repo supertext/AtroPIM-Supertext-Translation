@@ -52,9 +52,14 @@ const db = await mysql.createConnection(need('DATABASE_URL'));
 const q = async (sql, params = []) => (await db.query(sql, params))[0];
 
 /** Everything the plugin may write, per product: product row and its attribute values. */
+// AtroCore 2.7 dropped the soft-delete column of product_attribute_value (rows are deleted);
+// 2.4 to 2.6 still have it.
+const valuesSoftDelete = (await q("SHOW COLUMNS FROM product_attribute_value LIKE 'deleted'")).length > 0;
+
 async function snapshot() {
 	const products = await q('SELECT * FROM product WHERE deleted = 0 ORDER BY number');
-	const values = products.length ? await q('SELECT * FROM product_attribute_value WHERE deleted = 0 AND product_id IN (?) ORDER BY id', [products.map((p) => p.id)]) : [];
+	const notDeleted = valuesSoftDelete ? 'deleted = 0 AND ' : '';
+	const values = products.length ? await q(`SELECT * FROM product_attribute_value WHERE ${notDeleted}product_id IN (?) ORDER BY id`, [products.map((p) => p.id)]) : [];
 	return { products, values };
 }
 

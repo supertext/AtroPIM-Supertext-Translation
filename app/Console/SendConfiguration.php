@@ -36,7 +36,7 @@ class SendConfiguration extends AbstractConsole
             self::show($messages->text('config_off'), self::ERROR, true);
         }
 
-        if (!($sent['result']?->sent ?? false)) {
+        if (!($sent['result']->sent ?? false)) {
             self::show($messages->text('config_failed'), self::ERROR, true);
         }
 

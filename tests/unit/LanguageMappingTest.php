@@ -37,7 +37,7 @@ class LanguageMappingTest extends TestCase
         self::assertContains('de-CH', $options);
         self::assertContains('gsw-u-sd-chzh', $options);
         self::assertNotContains('de', $options, 'targets only');
-        self::assertCount(38, $options);
+        self::assertCount(42, $options);
     }
 
     public function testChosenCodesWinOverTheOldTextAndDefaults(): void

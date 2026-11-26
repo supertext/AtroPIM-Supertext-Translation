@@ -125,7 +125,7 @@ Supertext's target codes (October 2026; the API's list is `GET features`):
 | With a region | German `de-AT`, `de-CH`, `de-DE`; English `en-GB`, `en-US`; French `fr-CH`, `fr-FR`; Italian `it-CH`, `it-IT`; Portuguese `pt-BR`, `pt-PT` |
 | With a script | Chinese `zh-Hans`, `zh-Hant`; Serbian `sr-Cyrl`, `sr-Latn` |
 | Swiss German dialects | `gsw-u-sd-chzh` (Zurich), `gsw-u-sd-chbe` (Bern) |
-| Without a region | `bg`, `cs`, `da`, `el`, `es`, `fi`, `hr`, `hu`, `ja`, `ko`, `nb`, `nl`, `pl`, `rm`, `ru`, `sk`, `sl`, `sq`, `sv`, `tr` |
+| Without a region | `bg`, `cs`, `da`, `el`, `es`, `fi`, `hr`, `hu`, `id`, `ja`, `ko`, `nb`, `nl`, `pl`, `rm`, `ro`, `ru`, `sk`, `sl`, `sq`, `sv`, `th`, `tr`, `vi` |
 
 **Upgrading from the text mapping:** earlier versions had a text field **Language mapping** with one line per language (`de_DE = de-CH`). Nothing is lost: when the connection is opened or saved, each line for one of your languages is moved into its combo box. Lines for languages AtroPIM doesn't have (any more), or with a code Supertext doesn't list, stay in the old field (stored as `supertextLanguageCodes`, no longer on the form) and still count; a code that isn't in the list is sent as entered. A combo box always wins over a line, and a line for a language whose combo box was saved is removed.
 

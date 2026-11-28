@@ -4,6 +4,10 @@ All notable changes to Supertext Translation for AtroPIM.
 
 ## Unreleased
 
+### Security
+
+- The Supertext connection's *API URL* and *Review service URL* must use `https://` (`http://` only for `localhost` and `127.0.0.1`), so the API key is never sent unencrypted. New message in all four interface languages.
+
 ## 1.1.0 — 2026-11-26
 
 - Added: Indonesian, Romanian, Thai and Vietnamese (`id`, `ro`, `th`, `vi`) can be chosen as Supertext languages, all with formal and informal address (Supertext SDK 0.7.0).

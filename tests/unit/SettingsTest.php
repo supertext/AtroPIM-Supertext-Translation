@@ -19,6 +19,17 @@ class SettingsTest extends TestCase
         unset($_SERVER['SUPERTEXT_API_KEY'], $_ENV['SUPERTEXT_API_KEY'], $_SERVER['SUPERTEXT_API_URL'], $_ENV['SUPERTEXT_API_URL']);
     }
 
+    public function testOnlySafeAddressesForTheApiKey(): void
+    {
+        foreach (['', 'https://api.example.com/v1/', 'http://localhost:4010/v1/', 'http://127.0.0.1:8765/v1/'] as $url) {
+            self::assertTrue(Settings::isSafeUrl($url), $url);
+        }
+
+        foreach (['http://api.example.com/v1/', 'http://localhost.example.com/', 'ftp://api.example.com/', 'https:// x'] as $url) {
+            self::assertFalse(Settings::isSafeUrl($url), $url);
+        }
+    }
+
     public function testConnectionData(): void
     {
         $settings = Settings::fromConnectionData([

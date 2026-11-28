@@ -161,11 +161,11 @@ Connection (**Administration → Connections**, type *Supertext*):
 | --- | --- | --- |
 | API key | none | Encrypted. Falls back to the environment variable `SUPERTEXT_API_KEY`. |
 | Environment | Live | *Live* (`https://api.supertext.com/v1/`), *Staging*, *Testing* or *Custom URL*. The environment variable `SUPERTEXT_API_URL` overrides it (for tests against a stand-in API). |
-| API URL | none | Only for *Custom URL*. |
+| API URL | none | Only for *Custom URL*. Must start with `https://` (`http://` only for `localhost` or `127.0.0.1`). |
 | Timeout (seconds) | 180 | How long to wait for one language (30 to 1800). |
 | Supertext language for … | Supertext's code for the language, else *— choose —* | One combo box per AtroCore language with Supertext's target languages (see [Supertext language codes](#supertext-language-codes-and-the-language-mapping)). Stored as `supertextCode<Language>` (`supertextCodeDeDe`). Replaces the text field *Language mapping* (`supertextLanguageCodes`), whose lines are moved into the combo boxes. |
 | Translation review | off | One checkbox per AtroCore language, next to its combo box: translations **into** that language go through Supertext's review service (see [Translation review](#translation-review)). Stored as `supertextReview<Language>` (`supertextReviewDeDe`). |
-| Review service URL | Supertext's review service | Address of the review service for the languages with *Translation review* ticked. Empty turns review off for every language. Only change it when Supertext gives you another address. The environment variable `SUPERTEXT_REVIEW_URL` overrides it. Stored as `supertextReviewUrl`. |
+| Review service URL | Supertext's review service | Address of the review service for the languages with *Translation review* ticked. Empty turns review off for every language. Only change it when Supertext gives you another address; it must start with `https://`. The environment variable `SUPERTEXT_REVIEW_URL` overrides it. Stored as `supertextReviewUrl`. |
 | Send version information to Supertext | on | Sends the site URL and the versions of this module, the PIM and the runtime to Supertext when you save these settings and after an update, so Supertext support can see which version you run. No content, no API key and no personal data are sent. The environment variable `SUPERTEXT_VERSION_REPORTS=0` turns it off for the whole installation (see [below](#version-information-and-the-api-key-check)). |
 | API key check | (read-only) | The latest automatic check of the key, with its time, and whether version information is sent (with the ping URL). |
 | Languages | (read-only) | Each AtroCore language with its Supertext code, or *no Supertext language*. |

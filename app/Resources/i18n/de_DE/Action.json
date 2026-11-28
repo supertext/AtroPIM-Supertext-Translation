@@ -118,6 +118,7 @@
     "supertextFileHelp": "Laden Sie eine Datei hoch, die mit «Für Übersetzung exportieren» exportiert und inzwischen übersetzt wurde. Die Texte werden in der Zielsprache des Datensatzes gespeichert, wie bei einer Übersetzung mit Supertext.",
     "supertextFileResult": "Ergebnis",
     "supertextInvalidLanguageCode": "«{code}» ist keine Supertext-Sprache. Wählen Sie eine aus der Liste.",
+    "supertextInvalidUrl": "Die Adresse muss mit https:// beginnen (http:// nur für localhost).",
     "supertextLanguageReview": "· Übersetzungsprüfung",
     "supertextConfigOff": "Schalten Sie in der Supertext-Verbindung „Versionsinformationen an Supertext senden“ ein, um die Konfiguration zu senden.",
     "supertextConfigSent": "An Supertext gesendet: {extensions} Module, {languages} Sprachen.",

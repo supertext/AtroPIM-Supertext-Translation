@@ -20,6 +20,7 @@ use SupertextTranslation\Translation\ConnectionStatus;
 use SupertextTranslation\Translation\LanguageMapping;
 use SupertextTranslation\Translation\Messages;
 use SupertextTranslation\Translation\ReportingFactory;
+use SupertextTranslation\Translation\Settings;
 
 /**
  * The Supertext connection is the module's settings page:
@@ -79,6 +80,12 @@ class ConnectionService extends AbstractListener
     {
         if (!$data instanceof \stdClass) {
             return;
+        }
+
+        foreach (['supertextApiUrl', 'supertextReviewUrl'] as $field) {
+            if (\is_string($data->{$field} ?? null) && !Settings::isSafeUrl($data->{$field})) {
+                throw new BadRequest(Messages::forUser($this->getContainer())->text('invalid_url'));
+            }
         }
 
         $invalid = LanguageMapping::invalidValue((array) $data);

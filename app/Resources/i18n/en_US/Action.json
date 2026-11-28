@@ -118,6 +118,7 @@
     "supertextFileHelp": "Upload a file exported with Export for translation and translated since. The texts are saved in the record's target language, like a translation with Supertext.",
     "supertextFileResult": "Result",
     "supertextInvalidLanguageCode": "\"{code}\" is not a Supertext language. Choose one from the list.",
+    "supertextInvalidUrl": "The address must start with https:// (http:// only for localhost).",
     "supertextLanguageReview": "· translation review",
     "supertextConfigOff": "Turn on “Send version information to Supertext” on the Supertext connection to send the configuration.",
     "supertextConfigSent": "Sent to Supertext: {extensions} modules, {languages} languages.",

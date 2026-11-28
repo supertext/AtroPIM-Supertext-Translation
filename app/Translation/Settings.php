@@ -126,6 +126,17 @@ final class Settings
         return $this->apiKey() !== '' ? 'environment' : '';
     }
 
+    /**
+     * An address the API key may be sent to: https, or http only to this machine (a local stand-in).
+     * Empty counts as safe (the default address is used).
+     */
+    public static function isSafeUrl(string $url): bool
+    {
+        $url = trim($url);
+
+        return $url === '' || preg_match('#^(https://[^\s/]+(/\S*)?|http://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(/\S*)?)$#i', $url) === 1;
+    }
+
     public function baseUrl(): string
     {
         $override = self::env('SUPERTEXT_API_URL');
